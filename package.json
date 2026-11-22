@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "start": "node server/index.js",
-    "test": "node server/test-ssrf.js && node server/test-capture.js && node server/test-vision.js && node server/test-domain-age.js && node server/test-score.js",
+    "test": "node server/test-ssrf.js && node server/test-capture.js && node server/test-vision.js && node server/test-domain-age.js && node server/test-score.js && node server/test-endpoint.js",
     "test:ssrf": "node server/test-ssrf.js",
     "test:capture": "node server/test-capture.js",
     "test:vision": "node server/test-vision.js",
     "test:domain": "node server/test-domain-age.js",
-    "test:score": "node server/test-score.js"
+    "test:score": "node server/test-score.js",
+    "test:endpoint": "node server/test-endpoint.js"
   },
   "repository": {
     "type": "git",

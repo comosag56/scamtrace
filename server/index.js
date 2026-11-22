@@ -1,65 +1,66 @@
 import 'dotenv/config';
 import express from 'express';
+import fs from 'fs';
 import { assertSafe } from './ssrf.js';
 import { capture } from './capture.js';
 import { analyzeScreenshot } from './vision.js';
 import { getDomainAge } from './domain-age.js';
 import { scoreRisk } from './score.js';
 
-const app = express();
+export const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(express.static('web'));
+app.use('/evidence', express.static('evidence'));
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', service: 'ScamTrace API' });
 });
 
-app.post('/api/scan', async (req, res) => {
-  const { url } = req.body;
-  if (!url) {
-    return res.status(400).json({ error: 'URL is required' });
-  }
-
+async function handleInvestigation(req, res) {
+  const t0 = Date.now();
   try {
-    // 1. SSRF Validation
-    await assertSafe(url);
-
-    // 2. Headless Sandbox Detonation & Capture
-    const captureResult = await capture(url);
-
-    // 3. Vision Model Analysis
-    const visionResult = await analyzeScreenshot(captureResult.shotPath);
-
-    // 4. Domain Age Resolution
-    let domainData = null;
-    try {
-      domainData = await getDomainAge(url);
-    } catch (dErr) {
-      domainData = { error: dErr.message };
+    const { url } = req.body;
+    if (!url) {
+      return res.status(400).json({ error: 'URL is required' });
     }
 
-    // 5. Deterministic Risk Scoring
-    const risk = scoreRisk({
-      domain: domainData,
-      capture: captureResult,
-      vision: visionResult
-    });
+    // 1. SSRF Security Gate
+    await assertSafe(url);
 
+    // 2. Headless Sandbox Detonation
+    const cap = await capture(url);
+
+    // 3. Parallel Execution: Groq Multimodal Vision + RDAP Domain Age
+    const png = fs.readFileSync(cap.shotPath ?? 'evidence/shot.png');
+    const [vision, domain] = await Promise.all([
+      analyzeScreenshot(png).catch(e => ({ error: e.message })),
+      getDomainAge(cap.finalUrl).catch(e => ({ error: e.message })),
+    ]);
+
+    // 4. Deterministic Risk Evaluation
+    const risk = scoreRisk({ domain, capture: cap, vision });
+
+    // 5. Return Forensic Dossier
     res.json({
-      success: true,
       url,
+      capture: cap,
+      vision,
+      domain,
       risk,
-      capture: captureResult,
-      vision: visionResult,
-      domain: domainData,
-      timestamp: new Date().toISOString()
+      ms: Date.now() - t0,
     });
-  } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
+  } catch (e) {
+    res.status(400).json({ error: e.message });
   }
-});
+}
 
-app.listen(PORT, () => {
-  console.log(`ScamTrace server listening on http://localhost:${PORT}`);
-});
+app.post('/api/investigate', handleInvestigation);
+app.post('/api/scan', handleInvestigation); // Backwards-compatible alias
+
+if (process.argv[1]?.endsWith('index.js')) {
+  app.listen(PORT, () => {
+    console.log(`ScamTrace server listening on http://localhost:${PORT}`);
+  });
+}
