@@ -1,0 +1,116 @@
+# ScamTrace 🛡️🔍
+
+> **Rapid scam triage and forensic evidence capture in the critical first hour after fraud.**
+
+---
+
+## 🚨 The Problem: "The First Hour After a Scam"
+
+When an individual falls prey to online financial fraud or cyber scams—be it a malicious APK link, an electric bill payment spoof, a fake job offer, or a fraudulent UPI refund request—**the first 60 minutes ("The Golden Hour") determine whether money and evidence can ever be recovered.**
+
+Yet, this critical hour is almost always squandered due to three catastrophic bottlenecks:
+
+1. **The Panic & Confusion Paralysis**: Victims experience severe distress and disorientation. Instead of taking rapid remedial actions (e.g., locking cards, freezing net banking, flagging UTR numbers with their bank), victims panic, search randomly on search engines, or fall into secondary scams.
+2. **Volatile Evidence Disappearance**: Phishing infrastructure is ephemeral. Malicious short links expire, scam websites self-destruct or block IP addresses, Telegram channels are scrubbed, and scammers delete chat histories for both parties within minutes. By the time an investigator looks at the case, the link leads to a 404.
+3. **The Language & Technical Barrier**: Most victims—particularly seniors and non-English vernacular speakers—cannot navigate technical jargon or complex cybercrime portals. Explaining what a "domain header", "UTR number", or "APK SHA-256 fingerprint" is during an emergency is impossible.
+
+ScamTrace exists to turn that frantic first hour into an automated, calm, and forensically sound response.
+
+---
+
+## 🔄 The Flow
+
+ScamTrace automates the end-to-end incident response lifecycle in 5 integrated steps:
+
+```
+[ Link ] ──▶ [ Sandbox ] ──▶ [ Proof ] ──▶ [ Kannada Voice ] ──▶ [ Complaint Packet ]
+```
+
+```mermaid
+flowchart LR
+    A["🔗 Link Ingestion"] --> B["🧪 Headless Sandbox"]
+    B --> C["📸 Forensic Proof"]
+    C --> D["🎙️ Kannada Voice Agent"]
+    D --> E["📄 Complaint Packet"]
+
+    subgraph Step1 ["Step 1"]
+        A
+    end
+    subgraph Step2 ["Step 2"]
+        B
+    end
+    subgraph Step3 ["Step 3"]
+        C
+    end
+    subgraph Step4 ["Step 4"]
+        D
+    end
+    subgraph Step5 ["Step 5"]
+        E
+    end
+```
+
+### 1. 🔗 Link (Safe Ingestion)
+The victim or first responder pastes the suspicious URL, SMS link, QR destination, or fraudulent payment gateway link into ScamTrace via web or mobile interface.
+
+### 2. 🧪 Sandbox (Isolated Execution)
+The link is immediately detonated inside an isolated headless browsing environment (Chromium sandbox):
+- Emulates authentic mobile and desktop browser user-agents.
+- Safely follows and records HTTP redirect chains and cloaked endpoints.
+- Intercepts outbound network calls, DNS queries, and destination IP lookups without exposing the victim's device or network.
+
+### 3. 📸 Proof (Automated Forensic Capture)
+Before the scammer can pull down the domain, ScamTrace creates an immutable, timestamped digital evidence vault:
+- **Full-page visual screenshot** of the landing page, forms, and spoofed UI.
+- **Raw DOM snapshot** capturing malicious scripts and hidden form fields.
+- **HAR (HTTP Archive) trace** documenting server IPs, SSL certificates, response headers, and tracking IDs.
+- **Cryptographic hashing (SHA-256)** across all artifacts to establish non-tampering for legal admissibility (Section 65B Indian Evidence Act compliant structure).
+
+### 4. 🎙️ Kannada Voice (Empathetic Regional Guidance)
+A conversational vernacular voice assistant speaks to the user in **Kannada** (ಕನ್ನಡ):
+- **De-escalation & Triage**: Calms the victim down and instructs them on immediate emergency measures (*"ದಯವಿಟ್ಟು ಭಯಪಡಬೇಡಿ, ಇನ್ನಷ್ಟು ಹಣ ಕಳುಹಿಸಬೇಡಿ. ನಿಮ್ಮ ಬ್ಯಾಂಕ್ ಕಾರ್ಡ್ ಅನ್ನು ಈಗಲೇ ಬ್ಲಾಕ್ ಮಾಡಿ..."*).
+- **Interactive Fact-Finding**: Converses in natural spoken Kannada to collect crucial, non-technical details:
+  - Bank name and transaction method (UPI / IMPS / Net Banking).
+  - Transaction reference / UTR number from the SMS.
+  - Approximate timestamp and amount lost.
+  - Scammer's mobile number, UPI ID, or WhatsApp handle.
+- Converts spoken Kannada statements into structured digital claims via Speech-to-Text (STT) and structured entity extraction.
+
+### 5. 📄 Complaint Packet (One-Click Legal & Banking Dossier)
+Generates an all-in-one, standardized Cybercrime & Bank Dispute Dossier ready for immediate submission:
+- **National Cybercrime Reporting Portal (1930 / cybercrime.gov.in) Form**: Pre-formatted data fields ready for quick copy-paste or autofill.
+- **Bank Nodal Grievance Letter**: Formal chargeback / fraud transaction dispute letter citing RBI guidelines for zero-liability / limited-liability claims.
+- **Police Cyber Cell Report**: Formal complaint draft with complete chronological incident narrative and scammer identification markers.
+- **Forensic Annexure**: Attached screenshots, DNS/IP proof, redirect chain analysis, and SHA-256 checksums.
+
+---
+
+## 📊 Status
+
+| Component | Status | Details |
+|---|---|---|
+| **Forensic URL Sandbox** | 🟡 Alpha Prototype | Headless Chromium engine configured for redirect extraction and HAR capture |
+| **Evidence Locker & Hasher** | 🟡 Prototype | Automated screenshot & SHA-256 checksum generation pipeline |
+| **Kannada Voice Interface** | 🟡 In Development | Speech-to-Text & Text-to-Speech prompt workflow tuned for panic de-escalation |
+| **Complaint Packet Generator** | 🟢 Designed | Markdown & PDF dossier generator for 1930, Bank Grievance, and Police complaint |
+| **End-to-End Orchestrator** | 🟡 Work in Progress | Unifying the link intake, sandbox capture, voice triage, and packet export |
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js (v18+) or Python (3.10+)
+- Chromium / Playwright for sandbox browser automation
+- Git
+
+### Installation
+```bash
+git clone https://github.com/comosag56/scamtrace.git
+cd scamtrace
+```
+
+---
+
+## ⚖️ License & Mission
+ScamTrace is designed to democratize cyber safety and empower vulnerable citizens during their most vulnerable hour. Distributed under the MIT License.
