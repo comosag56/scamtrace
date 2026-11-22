@@ -104,11 +104,40 @@ Generates an all-in-one, standardized Cybercrime & Bank Dispute Dossier ready fo
 - Chromium / Playwright for sandbox browser automation
 - Git
 
-### Installation
-```bash
-git clone https://github.com/comosag56/scamtrace.git
-cd scamtrace
-```
+### Installation & Setup
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/comosag56/scamtrace.git
+   cd scamtrace
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Install Playwright Chromium browser:**
+   ```bash
+   npx playwright install chromium
+   ```
+
+4. **Configure environment variables:**
+   ```bash
+   cp .env.example .env
+   ```
+   Add your Groq API key(s) in `.env` (supports up to 3 keys for automatic rate-limit failover).
+
+5. **Run test verification suite:**
+   ```bash
+   npm test
+   ```
+
+6. **Start the ScamTrace server:**
+   ```bash
+   npm start
+   ```
+   The server will start listening at `http://localhost:3000`.
 
 ---
 

@@ -4,6 +4,7 @@
   "description": "> **Rapid scam triage and forensic evidence capture in the critical first hour after fraud.**",
   "main": "index.js",
   "scripts": {
+    "start": "node server/index.js",
     "test": "node server/test-ssrf.js && node server/test-capture.js && node server/test-vision.js && node server/test-domain-age.js",
     "test:ssrf": "node server/test-ssrf.js",
     "test:capture": "node server/test-capture.js",
@@ -16,7 +17,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "type": "module",
   "bugs": {
     "url": "https://github.com/comosag56/scamtrace/issues"
