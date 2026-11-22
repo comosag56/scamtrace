@@ -4,9 +4,10 @@
   "description": "> **Rapid scam triage and forensic evidence capture in the critical first hour after fraud.**",
   "main": "index.js",
   "scripts": {
-    "test": "node server/test-ssrf.js && node server/test-capture.js",
+    "test": "node server/test-ssrf.js && node server/test-capture.js && node server/test-vision.js",
     "test:ssrf": "node server/test-ssrf.js",
-    "test:capture": "node server/test-capture.js"
+    "test:capture": "node server/test-capture.js",
+    "test:vision": "node server/test-vision.js"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
   "dependencies": {
     "dotenv": "^18.0.10",
     "express": "^5.3.0",
+    "groq-sdk": "^1.6.0",
     "playwright": "^1.65.1"
   }
 }
