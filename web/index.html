@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>ScamTrace — First-Hour Cybercrime Triage & Forensic Sandbox</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07090e;
+      --bg-card: rgba(16, 21, 32, 0.75);
+      --bg-card-hover: rgba(22, 29, 44, 0.85);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(0, 229, 255, 0.25);
+      --text: #f0f4fc;
+      --text-muted: #8b9bb4;
+      --text-dim: #54647e;
+      --cyan: #00e5ff;
+      --cyan-glow: rgba(0, 229, 255, 0.35);
+      --crimson: #ff3366;
+      --crimson-glow: rgba(255, 51, 102, 0.35);
+      --amber: #ffaa00;
+      --amber-glow: rgba(255, 170, 0, 0.35);
+      --emerald: #00e699;
+      --emerald-glow: rgba(0, 230, 153, 0.35);
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Background Ambient 3D Grid & Glow */
+    .ambient-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 5rem;
+    }
+
+    /* Top Navigation / Brand Bar */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 3.5rem;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.15), rgba(0, 119, 255, 0.05));
+      border: 1px solid var(--border-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px var(--cyan-glow);
+    }
+
+    .brand-icon-box svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--cyan);
+    }
+
+    .brand-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .brand-badge {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: rgba(0, 229, 255, 0.1);
+      color: var(--cyan);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      font-weight: 600;
+    }
+
+    .system-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      padding: 6px 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      backdrop-filter: blur(10px);
+    }
+
+    .status-pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--emerald);
+      box-shadow: 0 0 10px var(--emerald-glow);
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto 3rem;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--cyan);
+      background: rgba(0, 229, 255, 0.08);
+      border: 1px solid rgba(0, 229, 255, 0.25);
+      padding: 5px 14px;
+      border-radius: var(--radius-full);
+      margin-bottom: 1.25rem;
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.1);
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+      background: linear-gradient(180deg, #ffffff 40%, #a4b3ca 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* 3D Command Console / Input Deck */
+    .investigate-deck {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      margin-bottom: 1.5rem;
+      position: relative;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .investigate-deck:focus-within {
+      border-color: var(--cyan);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 35px var(--cyan-glow);
+    }
+
+    .input-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(8, 12, 19, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      padding: 8px 10px 8px 16px;
+      transition: all 0.2s ease;
+    }
+
+    .input-bar svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--text-dim);
+      flex-shrink: 0;
+    }
+
+    .input-bar input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 1.02rem;
+      min-width: 0;
+    }
+
+    .input-bar input::placeholder {
+      color: var(--text-dim);
+    }
+
+    .btn-action {
+      background: linear-gradient(135deg, #00d2ff, #0070f3);
+      color: #fff;
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 12px 24px;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 20px rgba(0, 180, 255, 0.35);
+      flex-shrink: 0;
+    }
+
+    .btn-action:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 25px rgba(0, 180, 255, 0.55);
+    }
+
+    .btn-action:active {
+      transform: translateY(1px);
+    }
+
+    .btn-action:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Demo Shortcuts Pills */
+    .demo-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .demo-label {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .demo-pill {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      padding: 5px 12px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .demo-pill:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .demo-pill.scam:hover {
+      border-color: var(--crimson);
+      color: var(--crimson);
+      background: rgba(255, 51, 102, 0.08);
+    }
+
+    .demo-pill.safe:hover {
+      border-color: var(--emerald);
+      color: var(--emerald);
+      background: rgba(0, 230, 153, 0.08);
+    }
+
+    /* Live Telemetry Radar Tracker (Shown during scan) */
+    .telemetry-card {
+      display: none;
+      background: var(--bg-card);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      border-radius: var(--radius-lg);
+      padding: 2.25rem 2rem;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 229, 255, 0.15);
+      margin-top: 2rem;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .telemetry-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+
+    .telemetry-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      color: var(--cyan);
+    }
+
+    .telemetry-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      transition: color 0.3s ease;
+    }
+
+    .step-item.active {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .step-item.completed {
+      color: var(--emerald);
+    }
+
+    .step-spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--border);
+      border-top-color: var(--cyan);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .step-check {
+      width: 16px;
+      height: 16px;
+      color: var(--emerald);
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Result Dashboard */
+    .result-dashboard {
+      display: none;
+      margin-top: 2.5rem;
+      animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Severity Banner Card */
+    .severity-banner {
+      border-radius: var(--radius-lg);
+      padding: 1.75rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      margin-bottom: 1.75rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      flex-wrap: wrap;
+    }
+
+    .severity-banner.CRITICAL {
+      background: linear-gradient(135deg, rgba(255, 51, 102, 0.15), rgba(40, 10, 20, 0.8));
+      border: 1px solid var(--crimson);
+      box-shadow: 0 0 35px var(--crimson-glow);
+    }
+
+    .severity-banner.SUSPICIOUS {
+      background: linear-gradient(135deg, rgba(255, 170, 0, 0.15), rgba(40, 30, 10, 0.8));
+      border: 1px solid var(--amber);
+      box-shadow: 0 0 35px var(--amber-glow);
+    }
+
+    .severity-banner.LOW {
+      background: linear-gradient(135deg, rgba(0, 230, 153, 0.15), rgba(10, 40, 30, 0.8));
+      border: 1px solid var(--emerald);
+      box-shadow: 0 0 35px var(--emerald-glow);
+    }
+
+    .severity-info h2 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .severity-banner.CRITICAL .severity-info h2 { color: var(--crimson); }
+    .severity-banner.SUSPICIOUS .severity-info h2 { color: var(--amber); }
+    .severity-banner.LOW .severity-info h2 { color: var(--emerald); }
+
+    .severity-info p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .score-dial {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-width: 120px;
+    }
+
+    .dial-number {
+      font-family: var(--font-mono);
+      font-size: 2.75rem;
+      font-weight: 800;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .dial-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+
+    /* Emergency Advisory Box (Hindi & English) */
+    .advisory-box {
+      background: rgba(255, 51, 102, 0.06);
+      border: 1px solid rgba(255, 51, 102, 0.25);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.75rem;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .advisory-box svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--crimson);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .advisory-title {
+      font-weight: 700;
+      font-size: 0.98rem;
+      color: #ff99b0;
+      margin-bottom: 4px;
+    }
+
+    .advisory-hindi {
+      font-size: 0.88rem;
+      color: #ffc4d0;
+      font-weight: 500;
+    }
+
+    /* Grid Layout for Evidence & Insights */
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 1.75rem;
+    }
+
+    @media (max-width: 900px) {
+      .evidence-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      backdrop-filter: blur(20px);
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.75rem;
+    }
+
+    .panel-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-title svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--cyan);
+    }
+
+    /* Reasons List */
+    .reasons-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+
+    .reasons-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.92rem;
+      color: #dce5f2;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+    }
+
+    .reasons-list li svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--crimson);
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+
+    /* Signal Badges Row */
+    .signal-pills {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .signal-card {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border);
+      padding: 12px;
+      border-radius: var(--radius-sm);
+    }
+
+    .signal-card .label {
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .signal-card .val {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    /* 3D Perspective Device Mockup for Screenshot Proof */
+    .device-container {
+      perspective: 1200px;
+      margin-top: 0.5rem;
+    }
+
+    .device-frame {
+      border-radius: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      background: #000;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 25px rgba(0, 229, 255, 0.15);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transform: rotateX(4deg) rotateY(-3deg);
+      cursor: zoom-in;
+    }
+
+    .device-frame:hover {
+      transform: rotateX(0deg) rotateY(0deg) scale(1.02);
+      box-shadow: 0 35px 80px rgba(0, 0, 0, 0.9), 0 0 35px rgba(0, 229, 255, 0.3);
+    }
+
+    .device-frame img {
+      width: 100%;
+      height: 380px;
+      object-fit: cover;
+      object-position: top;
+      display: block;
+    }
+
+    .hash-badge {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      margin-top: 8px;
+      word-break: break-all;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+
+    /* Expandable JSON Terminal */
+    details {
+      margin-top: 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+    }
+
+    summary {
+      padding: 12px 16px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+      color: var(--cyan);
+      user-select: none;
+      outline: none;
+    }
+
+    summary:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    pre {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      padding: 16px;
+      overflow-x: auto;
+      color: #9cb3d5;
+      background: rgba(5, 8, 14, 0.85);
+      border-top: 1px solid var(--border);
+      max-height: 320px;
+    }
+
+    /* Fullscreen Modal for Screenshot Inspection */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-content {
+      max-width: 90vw;
+      max-height: 90vh;
+      overflow: auto;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+
+    .modal-content img {
+      max-width: 100%;
+      display: block;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: auto;
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      padding: 2rem 0 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Radar Canvas -->
+  <canvas class="ambient-canvas" id="radarCanvas"></canvas>
+
+  <div class="container">
+    
+    <!-- Header -->
+    <header>
+      <a href="/" class="brand-group">
+        <div class="brand-icon-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="m9 12 2 2 4-4"/>
+          </svg>
+        </div>
+        <div class="brand-title">
+          ScamTrace <span class="brand-badge">PRO v1.0</span>
+        </div>
+      </a>
+      <div class="system-status">
+        <div class="status-pulse"></div>
+        <span>Groq LPU Active</span>
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-eyebrow">
+        <span>⚡ 60-Minute Rapid Triage Pipeline</span>
+      </div>
+      <h1>Instant Cyber Forensics<br>& Scam Evidence Locker</h1>
+      <p>Detonate suspect links safely inside our isolated mobile sandbox. Detect brand spoofing, harvest forensic screenshots, and compute Section 63 BSA evidence hashes in seconds.</p>
+    </div>
+
+    <!-- Command Console Input Deck -->
+    <div class="investigate-deck">
+      <div class="input-bar">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="url" id="targetUrl" placeholder="Paste suspicious SMS link, WhatsApp URL, or payment gateway..." autocomplete="off">
+        <button class="btn-action" id="btnInvestigate">
+          <span id="btnText">Investigate Link</span>
+          <svg id="btnIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Quick Demo Shortcut Buttons -->
+      <div class="demo-bar">
+        <span class="demo-label">Instant Demo:</span>
+        <button class="demo-pill scam" onclick="loadDemo('mock-upi')">
+          <span>🚨 Electricity Bill Phish</span>
+        </button>
+        <button class="demo-pill safe" onclick="loadDemo('sbi')">
+          <span>🏦 State Bank of India (Official)</span>
+        </button>
+        <button class="demo-pill safe" onclick="loadDemo('bescom')">
+          <span>⚡ BESCOM Portal (Official)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Live Telemetry Radar (While Scanning) -->
+    <div class="telemetry-card" id="telemetryCard">
+      <div class="telemetry-header">
+        <div class="telemetry-title">
+          <div class="step-spinner"></div>
+          <span>Active Forensic Sandbox Detonation</span>
+        </div>
+        <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-dim);" id="telemetryTimer">0.0s</span>
+      </div>
+      <div class="telemetry-steps">
+        <div class="step-item active" id="step-ssrf">
+          <span class="step-status-icon">▶</span>
+          <span>1. Enforcing SSRF Firewall Barrier (blocking 127.0.0.1 & cloud metadata)...</span>
+        </div>
+        <div class="step-item" id="step-sandbox">
+          <span class="step-status-icon">○</span>
+          <span>2. Launching Isolated Chromium (Android Pixel 7 Emulation)...</span>
+        </div>
+        <div class="step-item" id="step-vision">
+          <span class="step-status-icon">○</span>
+          <span>3. Executing Groq Llama 3.2 / Qwen Multimodal Visual Threat Extraction...</span>
+        </div>
+        <div class="step-item" id="step-domain">
+          <span class="step-status-icon">○</span>
+          <span>4. Querying Authoritative RDAP / WHOIS Registration Timestamps...</span>
+        </div>
+        <div class="step-item" id="step-score">
+          <span class="step-status-icon">○</span>
+          <span>5. Computing Section 63 BSA SHA-256 Seal & Threat Scoring...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Dashboard -->
+    <div class="result-dashboard" id="resultDashboard">
+      
+      <!-- Top Severity Card -->
+      <div class="severity-banner" id="severityBanner">
+        <div class="severity-info">
+          <h2 id="verdictTitle">CRITICAL: 100/100</h2>
+          <p id="verdictSubtitle">High-confidence malicious phishing infrastructure detected.</p>
+        </div>
+        <div class="score-dial">
+          <div class="dial-number" id="dialScore">100</div>
+          <div class="dial-label">Risk Index</div>
+        </div>
+      </div>
+
+      <!-- Emergency Hindi / English Advisory Box (Shown on High Risk) -->
+      <div class="advisory-box" id="advisoryBox">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <div>
+          <div class="advisory-title">Immediate Victim Advisory / तत्काल पीड़ित सलाह:</div>
+          <p style="font-size: 0.92rem; color: #ffb8c7; margin-bottom: 4px;">
+            <strong>Do not send funds or enter your UPI PIN.</strong> If you already transacted, immediately call your bank to place a freeze/lien on the beneficiary account, and dial <strong>1930</strong> (National Cybercrime Reporting Portal).
+          </p>
+          <div class="advisory-hindi">
+            आगे कोई पैसे न भेजें या UPI PIN दर्ज न करें। तुरंत अपने बैंक को सूचित कर खाता फ्रीज करवाएं और साइबर हेल्पलाइन 1930 पर शिकायत दर्ज करें।
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Two-Column Evidence Grid -->
+      <div class="evidence-grid">
+        
+        <!-- Left Column: Risk Indicators & Signals -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div class="panel-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                <polyline points="2 17 12 22 22 17"/>
+                <polyline points="2 12 12 17 22 12"/>
+              </svg>
+              <span>Forensic Risk Indicators</span>
+            </div>
+            <span style="font-size: 0.8rem; font-family: var(--font-mono); color: var(--text-dim);" id="analysisLatency">540ms</span>
+          </div>
+
+          <ul class="reasons-list" id="reasonsList">
+            <!-- Dynamic Reasons -->
+          </ul>
+
+          <!-- Metadata Telemetry Matrix -->
+          <div class="signal-pills">
+            <div class="signal-card">
+              <div class="label">Impersonated Entity</div>
+              <div class="val" id="signalBrand">Electricity Board</div>
+            </div>
+            <div class="signal-card">
+              <div class="label">Domain Age</div>
+              <div class="val" id="signalAge">2 Days Old</div>
+            </div>
+            <div class="signal-card">
+              <div class="label">Redirect Hops</div>
+              <div class="val" id="signalHops">1 Jump</div>
+            </div>
+            <div class="signal-card">
+              <div class="label">Credential Theft</div>
+              <div class="val" id="signalInputs">UPI PIN, Phone</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: 3D Perspective Visual Evidence Device -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div class="panel-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                <line x1="12" y1="18" x2="12.01" y2="18"/>
+              </svg>
+              <span>Captured Sandbox Screenshot</span>
+            </div>
+            <span style="font-size: 0.75rem; color: var(--cyan); cursor: pointer;" onclick="openModal()">🔍 Fullscreen</span>
+          </div>
+
+          <div class="device-container">
+            <div class="device-frame" onclick="openModal()">
+              <img id="shotImg" src="" alt="Forensic Screenshot Proof">
+            </div>
+          </div>
+
+          <div class="hash-badge">
+            <strong style="color: var(--text-muted);">Section 63 BSA SHA-256:</strong><br>
+            <span id="shotHash">Computing...</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Raw Technical Dossier Dropdown -->
+      <details>
+        <summary>▶ Inspect Raw Forensic Dossier (JSON Export)</summary>
+        <pre id="rawJson">{ ... }</pre>
+      </details>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>ScamTrace Forensic Engine &copy; 2026. Preserving volatile digital evidence under Section 63 of Bharatiya Sakshya Adhiniyam.</p>
+    </footer>
+
+  </div>
+
+  <!-- Fullscreen Screenshot Modal -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <img id="modalImg" src="" alt="Fullscreen Evidence Screenshot">
+    </div>
+  </div>
+
+  <script>
+    // Elements
+    const targetUrl = document.getElementById('targetUrl');
+    const btnInvestigate = document.getElementById('btnInvestigate');
+    const btnText = document.getElementById('btnText');
+    const telemetryCard = document.getElementById('telemetryCard');
+    const telemetryTimer = document.getElementById('telemetryTimer');
+    const resultDashboard = document.getElementById('resultDashboard');
+    const severityBanner = document.getElementById('severityBanner');
+    const verdictTitle = document.getElementById('verdictTitle');
+    const verdictSubtitle = document.getElementById('verdictSubtitle');
+    const dialScore = document.getElementById('dialScore');
+    const advisoryBox = document.getElementById('advisoryBox');
+    const reasonsList = document.getElementById('reasonsList');
+    const signalBrand = document.getElementById('signalBrand');
+    const signalAge = document.getElementById('signalAge');
+    const signalHops = document.getElementById('signalHops');
+    const signalInputs = document.getElementById('signalInputs');
+    const shotImg = document.getElementById('shotImg');
+    const shotHash = document.getElementById('shotHash');
+    const analysisLatency = document.getElementById('analysisLatency');
+    const rawJson = document.getElementById('rawJson');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalImg = document.getElementById('modalImg');
+
+    // Quick Demo Preset Links
+    function loadDemo(type) {
+      if (type === 'mock-upi') {
+        targetUrl.value = 'http://power-bill-payment.xyz/verify-refund.php';
+      } else if (type === 'sbi') {
+        targetUrl.value = 'https://sbi.co.in';
+      } else if (type === 'bescom') {
+        targetUrl.value = 'https://bescom.karnataka.gov.in';
+      }
+      targetUrl.focus();
+    }
+
+    // Modal Handlers
+    function openModal() {
+      modalImg.src = shotImg.src;
+      modalOverlay.classList.add('open');
+    }
+    function closeModal() {
+      modalOverlay.classList.remove('open');
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // Investigation Trigger
+    btnInvestigate.addEventListener('click', performInvestigation);
+    targetUrl.addEventListener('keydown', e => { if (e.key === 'Enter') performInvestigation(); });
+
+    let timerInterval = null;
+
+    async function performInvestigation() {
+      const url = targetUrl.value.trim();
+      if (!url) {
+        alert('Please enter a website link to investigate.');
+        targetUrl.focus();
+        return;
+      }
+
+      // UI Transition: Start Scan
+      btnInvestigate.disabled = true;
+      btnText.textContent = 'Scanning...';
+      telemetryCard.style.display = 'block';
+      resultDashboard.style.display = 'none';
+
+      let startTime = Date.now();
+      timerInterval = setInterval(() => {
+        telemetryTimer.textContent = ((Date.now() - startTime) / 1000).toFixed(1) + 's';
+      }, 100);
+
+      // Animate telemetry step progression
+      const steps = ['step-ssrf', 'step-sandbox', 'step-vision', 'step-domain', 'step-score'];
+      let currentStep = 0;
+      const stepProgression = setInterval(() => {
+        if (currentStep < steps.length - 1) {
+          document.getElementById(steps[currentStep]).classList.remove('active');
+          document.getElementById(steps[currentStep]).classList.add('completed');
+          document.getElementById(steps[currentStep]).querySelector('.step-status-icon').textContent = '✓';
+          currentStep++;
+          document.getElementById(steps[currentStep]).classList.add('active');
+        }
+      }, 600);
+
+      try {
+        const response = await fetch('/api/investigate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url })
+        });
+
+        const data = await response.json();
+        clearInterval(stepProgression);
+        clearInterval(timerInterval);
+
+        if (data.error) {
+          alert('Investigation Error: ' + data.error);
+          return;
+        }
+
+        renderResults(data);
+
+      } catch (err) {
+        clearInterval(stepProgression);
+        clearInterval(timerInterval);
+        alert('Network or Server Connection Error: ' + err.message);
+      } finally {
+        btnInvestigate.disabled = false;
+        btnText.textContent = 'Investigate Link';
+        telemetryCard.style.display = 'none';
+      }
+    }
+
+    function renderResults(d) {
+      resultDashboard.style.display = 'block';
+
+      // 1. Severity & Score Banner
+      severityBanner.className = 'severity-banner ' + d.risk.level;
+      verdictTitle.textContent = `${d.risk.level}: ${d.risk.score}/100`;
+      dialScore.textContent = d.risk.score;
+
+      if (d.risk.level === 'CRITICAL') {
+        verdictSubtitle.textContent = 'High-conviction fraudulent site designed to steal financial credentials.';
+        advisoryBox.style.display = 'flex';
+      } else if (d.risk.level === 'SUSPICIOUS') {
+        verdictSubtitle.textContent = 'Elevated risk detected. Several deceptive indicators present.';
+        advisoryBox.style.display = 'flex';
+      } else {
+        verdictSubtitle.textContent = 'Legitimate, established institutional website. No malicious indicators found.';
+        advisoryBox.style.display = 'none';
+      }
+
+      // 2. Reasons List
+      reasonsList.innerHTML = '';
+      if (d.risk.reasons && d.risk.reasons.length > 0) {
+        d.risk.reasons.forEach(r => {
+          const li = document.createElement('li');
+          li.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <span>${r}</span>
+          `;
+          reasonsList.appendChild(li);
+        });
+      } else {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <svg style="stroke: var(--emerald);" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          <span>All security checks passed. Domain is authenticated with zero malicious form fields.</span>
+        `;
+        reasonsList.appendChild(li);
+      }
+
+      // 3. Telemetry Matrix Badges
+      signalBrand.textContent = d.vision?.impersonated_brand || 'None Detected';
+      signalAge.textContent = typeof d.domain?.ageInDays === 'number' 
+        ? `${d.domain.ageInDays} Days (${(d.domain.ageInDays/365).toFixed(1)} yrs)` 
+        : 'Unknown';
+      signalHops.textContent = `${(d.capture?.hops || []).length} Redirect(s)`;
+
+      const sensitiveNames = (d.capture?.fields || [])
+        .filter(f => /pass|pin|otp|card|cvv|upi/i.test(`${f.type} ${f.name} ${f.placeholder}`))
+        .map(f => f.name || f.placeholder || f.type);
+      signalInputs.textContent = sensitiveNames.length > 0 ? sensitiveNames.slice(0, 2).join(', ') : 'None (Safe)';
+
+      analysisLatency.textContent = `${d.ms || 0}ms Latency`;
+
+      // 4. Screenshot & Hash
+      if (d.capture?.shotPath) {
+        shotImg.src = '/' + d.capture.shotPath;
+      }
+      shotHash.textContent = d.capture?.shotSha || 'Pending cryptographic verification';
+
+      // 5. Raw JSON
+      rawJson.textContent = JSON.stringify(d, null, 2);
+
+      // Smooth scroll down to results
+      resultDashboard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Subtle 3D Radar Wave on Background Canvas
+    const canvas = document.getElementById('radarCanvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    let angle = 0;
+    function drawRadar() {
+      ctx.clearRect(0, 0, width, height);
+
+      const cx = width / 2;
+      const cy = height * 0.35;
+      const maxRadius = Math.max(width, height) * 0.45;
+
+      ctx.save();
+      ctx.strokeStyle = 'rgba(0, 229, 255, 0.05)';
+      ctx.lineWidth = 1;
+
+      // Concentric circles
+      for (let r = 80; r < maxRadius; r += 120) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      // Sweep Beam
+      const sweepX = cx + Math.cos(angle) * maxRadius;
+      const sweepY = cy + Math.sin(angle) * maxRadius;
+      const grad = ctx.createLinearGradient(cx, cy, sweepX, sweepY);
+      grad.addColorStop(0, 'rgba(0, 229, 255, 0.12)');
+      grad.addColorStop(1, 'rgba(0, 229, 255, 0)');
+
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, maxRadius, angle - 0.25, angle);
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      ctx.restore();
+      angle += 0.008;
+      requestAnimationFrame(drawRadar);
+    }
+    drawRadar();
+  </script>
+</body>
+</html>
