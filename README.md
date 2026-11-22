@@ -64,7 +64,7 @@ Before the scammer can pull down the domain, ScamTrace creates an immutable, tim
 - **Full-page visual screenshot** of the landing page, forms, and spoofed UI.
 - **Raw DOM snapshot** capturing malicious scripts and hidden form fields.
 - **HAR (HTTP Archive) trace** documenting server IPs, SSL certificates, response headers, and tracking IDs.
-- **Cryptographic hashing (SHA-256)** across all artifacts to establish non-tampering for legal admissibility (Section 65B Indian Evidence Act compliant structure).
+- **Cryptographic hashing (SHA-256)** across all artifacts to establish non-tampering and support preserving electronic evidence for a legal certificate under Section 63 of the Bharatiya Sakshya Adhiniyam (BSA, 2023).
 
 ### 4. 🎙️ Hindi / English Voice (Empathetic Triage & De-escalation)
 A conversational bilingual voice assistant speaks to the user in **Hindi** (हिंदी) and **English**:
@@ -79,7 +79,7 @@ A conversational bilingual voice assistant speaks to the user in **Hindi** (ह�
 ### 5. 📄 Complaint Packet (One-Click Legal & Banking Dossier)
 Generates an all-in-one, standardized Cybercrime & Bank Dispute Dossier ready for immediate submission:
 - **National Cybercrime Reporting Portal (1930 / cybercrime.gov.in) Form**: Pre-formatted data fields ready for quick copy-paste or autofill.
-- **Bank Nodal Grievance Letter**: Formal chargeback / fraud transaction dispute letter citing RBI guidelines for zero-liability / limited-liability claims.
+- **Bank Nodal Grievance Letter**: Formal urgent dispute request to investigate, place an immediate lien/hold on beneficiary funds across the recipient bank, and initiate interbank fraud recall protocols (addressing Authorized Push Payment fraud with no guarantee of liability).
 - **Police Cyber Cell Report**: Formal complaint draft with complete chronological incident narrative and scammer identification markers.
 - **Forensic Annexure**: Attached screenshots, DNS/IP proof, redirect chain analysis, and SHA-256 checksums.
 
