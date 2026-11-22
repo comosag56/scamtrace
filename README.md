@@ -23,14 +23,14 @@ ScamTrace exists to turn that frantic first hour into an automated, calm, and fo
 ScamTrace automates the end-to-end incident response lifecycle in 5 integrated steps:
 
 ```
-[ Link ] ──▶ [ Sandbox ] ──▶ [ Proof ] ──▶ [ Kannada Voice ] ──▶ [ Complaint Packet ]
+[ Link ] ──▶ [ Sandbox ] ──▶ [ Proof ] ──▶ [ Hindi/English Voice ] ──▶ [ Complaint Packet ]
 ```
 
 ```mermaid
 flowchart LR
     A["🔗 Link Ingestion"] --> B["🧪 Headless Sandbox"]
     B --> C["📸 Forensic Proof"]
-    C --> D["🎙️ Kannada Voice Agent"]
+    C --> D["🎙️ Hindi / English Voice Agent"]
     D --> E["📄 Complaint Packet"]
 
     subgraph Step1 ["Step 1"]
@@ -66,15 +66,15 @@ Before the scammer can pull down the domain, ScamTrace creates an immutable, tim
 - **HAR (HTTP Archive) trace** documenting server IPs, SSL certificates, response headers, and tracking IDs.
 - **Cryptographic hashing (SHA-256)** across all artifacts to establish non-tampering for legal admissibility (Section 65B Indian Evidence Act compliant structure).
 
-### 4. 🎙️ Kannada Voice (Empathetic Regional Guidance)
-A conversational vernacular voice assistant speaks to the user in **Kannada** (ಕನ್ನಡ):
-- **De-escalation & Triage**: Calms the victim down and instructs them on immediate emergency measures (*"ದಯವಿಟ್ಟು ಭಯಪಡಬೇಡಿ, ಇನ್ನಷ್ಟು ಹಣ ಕಳುಹಿಸಬೇಡಿ. ನಿಮ್ಮ ಬ್ಯಾಂಕ್ ಕಾರ್ಡ್ ಅನ್ನು ಈಗಲೇ ಬ್ಲಾಕ್ ಮಾಡಿ..."*).
-- **Interactive Fact-Finding**: Converses in natural spoken Kannada to collect crucial, non-technical details:
+### 4. 🎙️ Hindi / English Voice (Empathetic Triage & De-escalation)
+A conversational bilingual voice assistant speaks to the user in **Hindi** (हिंदी) and **English**:
+- **De-escalation & Triage**: Calms the victim down and instructs them on immediate emergency measures (*"कृपया घबराएं नहीं। आगे कोई पैसे न भेजें। अपना बैंक कार्ड और UPI तुरंत ब्लॉक करें..."* / *"Please do not panic. Do not transfer any more funds. Block your bank card and UPI immediately..."*).
+- **Interactive Fact-Finding**: Converses naturally in Hindi/Hinglish/English to collect crucial, non-technical details:
   - Bank name and transaction method (UPI / IMPS / Net Banking).
   - Transaction reference / UTR number from the SMS.
   - Approximate timestamp and amount lost.
   - Scammer's mobile number, UPI ID, or WhatsApp handle.
-- Converts spoken Kannada statements into structured digital claims via Speech-to-Text (STT) and structured entity extraction.
+- Converts spoken statements into structured digital claims via Speech-to-Text (STT) and structured entity extraction.
 
 ### 5. 📄 Complaint Packet (One-Click Legal & Banking Dossier)
 Generates an all-in-one, standardized Cybercrime & Bank Dispute Dossier ready for immediate submission:
@@ -91,7 +91,7 @@ Generates an all-in-one, standardized Cybercrime & Bank Dispute Dossier ready fo
 |---|---|---|
 | **Forensic URL Sandbox** | 🟡 Alpha Prototype | Headless Chromium engine configured for redirect extraction and HAR capture |
 | **Evidence Locker & Hasher** | 🟡 Prototype | Automated screenshot & SHA-256 checksum generation pipeline |
-| **Kannada Voice Interface** | 🟡 In Development | Speech-to-Text & Text-to-Speech prompt workflow tuned for panic de-escalation |
+| **Hindi / English Voice Interface** | 🟡 In Development | Bilingual STT/TTS prompt workflow tuned for panic de-escalation in Hindi & English |
 | **Complaint Packet Generator** | 🟢 Designed | Markdown & PDF dossier generator for 1930, Bank Grievance, and Police complaint |
 | **End-to-End Orchestrator** | 🟡 Work in Progress | Unifying the link intake, sandbox capture, voice triage, and packet export |
 
