@@ -15,7 +15,7 @@ async function runTest() {
   console.log(`Testing capture on fixture: ${testUrl}`);
   const startTime = Date.now();
   
-  const result = await capture(testUrl);
+  const result = await capture(testUrl, { allowLocalFixtures: true });
   const elapsed = Date.now() - startTime;
 
   console.log(`\nCapture completed in ${elapsed}ms:`);

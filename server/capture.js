@@ -1,8 +1,14 @@
 import { chromium } from 'playwright';
 import crypto from 'crypto';
 import fs from 'fs';
+import { assertSafe } from './ssrf.js';
 
-export async function capture(url) {
+export async function capture(url, options = {}) {
+  // 1. Initial pre-navigation SSRF check (unless explicitly bypassed for local test fixtures)
+  if (!options.allowLocalFixtures || !url.startsWith('file://')) {
+    await assertSafe(url);
+  }
+
   const browser = await chromium.launch();
   try {
     const ctx = await browser.newContext({
@@ -13,6 +19,25 @@ export async function capture(url) {
     });
 
     const page = await ctx.newPage();
+
+    // 2. Playwright route interceptor: validates all outgoing requests and redirects against SSRF
+    await page.route('**/*', async route => {
+      const reqUrl = route.request().url();
+      
+      // Allow in-memory browser URLs
+      if (reqUrl.startsWith('data:') || reqUrl.startsWith('blob:') || (options.allowLocalFixtures && reqUrl.startsWith('file:'))) {
+        return route.continue();
+      }
+
+      try {
+        await assertSafe(reqUrl);
+        await route.continue();
+      } catch (err) {
+        console.warn(`[SSRF Blocked] Aborted request to ${reqUrl}: ${err.message}`);
+        await route.abort('blockedbyclient');
+      }
+    });
+
     const hops = [];
 
     // Track navigation redirects while ignoring background image/script noise
