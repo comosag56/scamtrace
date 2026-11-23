@@ -6,3 +6,4 @@ output/
 dist/
 .DS_Store
 Thumbs.db
+.gemini/
