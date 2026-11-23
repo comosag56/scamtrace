@@ -3,75 +3,76 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#07090e">
-  <meta name="description" content="ScamTrace — Rapid Cybercrime Triage & Section 63 BSA Digital Evidence Locker">
-  <title>ScamTrace — First-Hour Cybercrime Triage & Forensic Sandbox</title>
+  <meta name="theme-color" content="#0c0b0a">
+  <meta name="color-scheme" content="dark only">
+  <meta name="description" content="ScamTrace — First-Hour Cybercrime Triage & Section 63 BSA Forensic Evidence Locker">
+  <title>ScamTrace — First-Hour Scam Triage & Forensic Locker</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      color-scheme: dark;
-      --bg: #07090e;
-      --bg-elevated: #0d121c;
-      --bg-surface: rgba(16, 22, 35, 0.75);
-      --bg-card: rgba(19, 27, 43, 0.65);
-      --border: rgba(255, 255, 255, 0.08);
-      --border-highlight: rgba(255, 255, 255, 0.16);
-      --border-cyan: rgba(0, 240, 255, 0.35);
+      /* Warm Retro-Industrial & Transistor Palette (wHACKiest inspired) */
+      --bg: #0c0b0a;
+      --bg-panel: #161513;
+      --bg-card: #1c1a17;
+      --bg-card-hover: #24221e;
       
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
-      --text-dim: #64748b;
+      --amber: #fd9c36;
+      --amber-warm: #ff8a24;
+      --amber-glow: rgba(253, 156, 54, 0.35);
+      --amber-dim: rgba(253, 156, 54, 0.12);
       
-      --cyan: #00f0ff;
-      --cyan-soft: rgba(0, 240, 255, 0.12);
-      --cyan-glow: rgba(0, 240, 255, 0.28);
+      --blueprint: #0357d6;
+      --blueprint-glow: rgba(3, 87, 214, 0.35);
       
-      --crimson: #ff2b56;
-      --crimson-soft: rgba(255, 43, 86, 0.12);
-      --crimson-glow: rgba(255, 43, 86, 0.35);
+      --crimson: #ff3355;
+      --crimson-glow: rgba(255, 51, 85, 0.35);
       
-      --amber: #ffaa00;
-      --amber-soft: rgba(255, 170, 0, 0.12);
-      --amber-glow: rgba(255, 170, 0, 0.35);
+      --emerald: #00d68f;
+      --emerald-glow: rgba(0, 214, 143, 0.35);
       
-      --emerald: #00e699;
-      --emerald-soft: rgba(0, 230, 153, 0.12);
-      --emerald-glow: rgba(0, 230, 153, 0.35);
+      --text: #f4efe6;
+      --text-muted: #a39c90;
+      --text-dim: #6b655b;
       
-      --radius-sm: 8px;
-      --radius-md: 14px;
-      --radius-lg: 22px;
-      --radius-full: 9999px;
+      --border: #2d2a24;
+      --border-strong: #48433a;
+      --border-accent: #ff8a24;
+      
+      --wire-dormant: #38342c;
+      --wire-powered: #fd9c36;
+      
+      --radius-xs: 3px;
+      --radius-sm: 6px;
+      --radius-md: 12px;
       
       --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
       
-      --shadow-ambient: 0 30px 80px rgba(0, 0, 0, 0.65);
-      --shadow-card: 0 16px 36px rgba(0, 0, 0, 0.45);
+      --shadow-hardware: 4px 6px 0px rgba(0, 0, 0, 0.65);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     ::selection {
-      background: rgba(0, 240, 255, 0.25);
-      color: #ffffff;
+      background: var(--amber);
+      color: #0c0b0a;
     }
 
     ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
+      width: 7px;
+      height: 7px;
     }
     ::-webkit-scrollbar-track {
-      background: #07090e;
+      background: #0c0b0a;
     }
     ::-webkit-scrollbar-thumb {
-      background: #1e293b;
-      border-radius: 4px;
+      background: #2a2722;
+      border-radius: 3px;
     }
     ::-webkit-scrollbar-thumb:hover {
-      background: #334155;
+      background: #3e3a33;
     }
 
     body {
@@ -79,52 +80,49 @@
       color: var(--text);
       font-family: var(--font-sans);
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
       overflow-x: hidden;
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* 3D Horizon & Depth Canvas */
-    #ambientCanvas {
+    /* Ambient CRT Scanline Overlay */
+    .crt-texture {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      inset: 0;
       pointer-events: none;
-      z-index: 0;
-      opacity: 0.75;
+      z-index: 100;
+      background: linear-gradient(rgba(18, 16, 14, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+      background-size: 100% 3px, 3px 100%;
+      opacity: 0.45;
     }
 
-    .container {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: 1160px;
-      margin: 0 auto;
-      padding: 2.25rem 1.5rem 5rem;
-    }
-
-    /* Focus styling */
-    a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible {
-      outline: 2px solid var(--cyan);
+    a:focus-visible, button:focus-visible, input:focus-visible {
+      outline: 2px solid var(--amber);
       outline-offset: 3px;
     }
 
-    /* Top HUD Navigation Bar */
+    .wrap {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+    }
+
+    /* ==============================================================
+       HEADER / TOP HUD BAR
+       ============================================================== */
     header {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 1.75rem 1.5rem 1rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 1rem;
-      margin-bottom: 3.25rem;
       flex-wrap: wrap;
+      border-bottom: 1px solid var(--border);
     }
 
-    .brand-link {
+    .brand-box {
       display: flex;
       align-items: center;
       gap: 12px;
@@ -132,556 +130,774 @@
       color: inherit;
     }
 
-    .brand-badge-box {
-      width: 44px;
-      height: 44px;
-      border-radius: var(--radius-md);
-      background: linear-gradient(135deg, rgba(0, 240, 255, 0.16), rgba(0, 100, 255, 0.06));
-      border: 1px solid var(--border-cyan);
+    .brand-stamp {
+      width: 38px;
+      height: 38px;
+      background: #1c1a16;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-xs);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 24px var(--cyan-glow);
-      position: relative;
-      overflow: hidden;
+      box-shadow: 2px 3px 0px rgba(0,0,0,0.5);
     }
 
-    .brand-badge-box::after {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%;
-      width: 50%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
-      animation: shine 4s infinite linear;
+    .brand-stamp svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--amber);
     }
 
-    @keyframes shine {
-      0% { left: -100%; }
-      20%, 100% { left: 200%; }
+    .brand-titles {
+      display: flex;
+      flex-direction: column;
     }
 
-    .brand-badge-box svg {
-      width: 22px;
-      height: 22px;
-      stroke: var(--cyan);
-    }
-
-    .brand-title {
-      font-size: 1.32rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
+    .brand-name {
+      font-size: 1.35rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
-    .tag-seal {
+    .brand-tag {
       font-family: var(--font-mono);
       font-size: 0.68rem;
-      padding: 3px 8px;
-      border-radius: 4px;
-      background: var(--cyan-soft);
-      color: var(--cyan);
-      border: 1px solid var(--border-cyan);
-      letter-spacing: 0.05em;
-      font-weight: 600;
+      color: var(--amber);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
     }
 
-    .hud-controls {
+    .top-telemetry {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
 
-    .hud-chip {
+    .hud-stat {
+      background: #141311;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xs);
+      padding: 6px 12px;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: var(--text-muted);
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 0.78rem;
-      font-family: var(--font-mono);
-      color: var(--text-muted);
-      padding: 6px 14px;
-      background: rgba(16, 22, 35, 0.6);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-full);
-      backdrop-filter: blur(12px);
+      box-shadow: 2px 2px 0px rgba(0,0,0,0.4);
     }
 
-    .chip-indicator {
+    .hud-dot {
       width: 7px;
       height: 7px;
       border-radius: 50%;
       background: var(--emerald);
-      box-shadow: 0 0 10px var(--emerald);
-      animation: radarPulse 2.4s infinite ease-in-out;
+      box-shadow: 0 0 8px var(--emerald);
+      animation: pulseDot 2s infinite ease-in-out;
     }
 
-    @keyframes radarPulse {
+    @keyframes pulseDot {
       0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
+      50% { opacity: 0.3; transform: scale(0.8); }
     }
 
-    .sound-btn {
-      background: rgba(16, 22, 35, 0.6);
+    .audio-toggle-btn {
+      background: #141311;
       border: 1px solid var(--border);
-      border-radius: var(--radius-full);
-      color: var(--text-muted);
-      padding: 6px 12px;
-      font-size: 0.76rem;
+      border-radius: var(--radius-xs);
+      color: var(--text-dim);
       font-family: var(--font-mono);
+      font-size: 0.74rem;
+      padding: 6px 12px;
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      cursor: pointer;
       transition: all 0.2s ease;
-      backdrop-filter: blur(12px);
     }
 
-    .sound-btn:hover {
-      border-color: var(--border-highlight);
-      color: var(--text);
+    .audio-toggle-btn.active {
+      border-color: var(--amber);
+      color: var(--amber);
+      background: var(--amber-dim);
     }
 
-    .sound-btn.active {
-      border-color: var(--border-cyan);
-      color: var(--cyan);
-      background: var(--cyan-soft);
-    }
-
-    /* Hero Presentation */
-    .hero {
-      max-width: 780px;
-      margin: 0 auto 3rem;
+    /* ==============================================================
+       SECTION 01: HERO & MECHANICAL ROLLING COUNTER
+       ============================================================== */
+    .hero-zone {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 3.5rem 1.5rem 4rem;
       text-align: center;
     }
 
-    .hero h1 {
-      font-size: clamp(2.1rem, 4.8vw, 3.4rem);
-      font-weight: 800;
-      line-height: 1.15;
-      letter-spacing: -0.035em;
-      margin-bottom: 1.15rem;
-      color: #ffffff;
+    .era-stamp {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--amber);
+      background: var(--amber-dim);
+      border: 1px solid var(--border-accent);
+      padding: 5px 14px;
+      border-radius: var(--radius-xs);
+      margin-bottom: 1.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      box-shadow: 2px 3px 0px rgba(0,0,0,0.4);
     }
 
-    .hero p {
-      font-size: 1.05rem;
+    .hero-zone h1 {
+      font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.08;
+      margin-bottom: 1.25rem;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+
+    .hero-zone h1 span {
+      color: var(--amber);
+    }
+
+    .hero-zone p {
+      font-size: 1.12rem;
       color: var(--text-muted);
       line-height: 1.65;
-      max-width: 680px;
-      margin: 0 auto;
+      max-width: 720px;
+      margin: 0 auto 2.5rem;
     }
 
-    /* Main Detonation Console */
-    .command-deck {
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 1.65rem;
-      box-shadow: var(--shadow-ambient), 0 0 0 1px rgba(255, 255, 255, 0.02);
-      backdrop-filter: blur(28px);
-      margin-bottom: 2rem;
+    /* Mechanical Rolling Countdown Clock */
+    .mechanical-clock-container {
+      display: inline-flex;
+      align-items: center;
+      gap: 16px;
+      background: #141311;
+      border: 1px solid var(--border-strong);
+      padding: 14px 24px;
+      border-radius: var(--radius-xs);
+      box-shadow: var(--shadow-hardware);
+      margin-bottom: 2.5rem;
+    }
+
+    .clock-title {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      text-align: left;
+    }
+
+    .clock-drums {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Mechanical Split-Flap / Roller Digit */
+    .digit-drum {
+      width: 28px;
+      height: 38px;
+      background: #080807;
+      border: 1px solid #33302a;
+      border-radius: 2px;
+      overflow: hidden;
       position: relative;
-      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+      font-family: var(--font-mono);
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--amber);
+      line-height: 38px;
+      text-align: center;
+      box-shadow: inset 0 0 6px rgba(0,0,0,0.8);
     }
 
-    .command-deck:focus-within {
-      border-color: var(--border-cyan);
-      box-shadow: var(--shadow-ambient), 0 0 45px var(--cyan-glow);
+    .drum-strip {
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .input-shell {
+    .drum-strip span {
+      height: 38px;
+      display: block;
+    }
+
+    .drum-sep {
+      font-family: var(--font-mono);
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #555046;
+      margin: 0 2px;
+    }
+
+    /* Detonation Console Deck */
+    .triage-console {
+      max-width: 860px;
+      margin: 0 auto;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-xs);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-hardware);
+      position: relative;
+      transition: border-color 0.25s ease;
+    }
+
+    .triage-console:focus-within {
+      border-color: var(--amber);
+      box-shadow: var(--shadow-hardware), 0 0 35px var(--amber-glow);
+    }
+
+    .console-input-row {
       display: flex;
       align-items: center;
       gap: 12px;
-      background: rgba(8, 12, 19, 0.95);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
+      background: #080807;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-xs);
       padding: 8px 10px 8px 16px;
-      transition: border-color 0.2s ease;
     }
 
-    .input-shell:focus-within {
-      border-color: rgba(0, 240, 255, 0.4);
-    }
-
-    .input-shell svg.search-icon {
+    .console-input-row svg {
       width: 20px;
       height: 20px;
       stroke: var(--text-dim);
       flex-shrink: 0;
     }
 
-    .input-shell input {
+    .console-input-row input {
       flex: 1;
       background: transparent;
       border: none;
       outline: none;
       color: var(--text);
       font-family: var(--font-sans);
-      font-size: 1.02rem;
+      font-size: 1.05rem;
       min-width: 0;
     }
 
-    .input-shell input::placeholder {
+    .console-input-row input::placeholder {
       color: var(--text-dim);
     }
 
-    .clear-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-dim);
-      cursor: pointer;
-      display: none;
-      padding: 4px;
-      border-radius: 4px;
-    }
-
-    .clear-btn:hover {
-      color: var(--text);
-    }
-
-    .btn-detonate {
-      background: linear-gradient(135deg, #00e5ff 0%, #0066ff 100%);
-      color: #ffffff;
-      font-family: var(--font-sans);
-      font-weight: 700;
-      font-size: 0.95rem;
+    .btn-detonate-action {
+      background: var(--amber);
+      color: #0c0b0a;
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 0.9rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
       padding: 13px 26px;
-      border-radius: var(--radius-sm);
-      border: none;
+      border-radius: var(--radius-xs);
+      border: 1px solid #ffb05c;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
-      box-shadow: 0 4px 22px rgba(0, 180, 255, 0.4);
+      gap: 8px;
+      transition: transform 0.15s ease, background-color 0.2s ease;
+      box-shadow: 2px 3px 0px rgba(0,0,0,0.6);
       flex-shrink: 0;
       min-height: 48px;
     }
 
-    .btn-detonate:hover {
+    .btn-detonate-action:hover {
+      background: #ffaa47;
       transform: translateY(-1px);
-      box-shadow: 0 8px 30px rgba(0, 180, 255, 0.6);
     }
 
-    .btn-detonate:active {
-      transform: scale(0.98);
+    .btn-detonate-action:active {
+      transform: translateY(1px);
     }
 
-    .btn-detonate:disabled {
+    .btn-detonate-action:disabled {
       opacity: 0.55;
       cursor: not-allowed;
       transform: none;
     }
 
-    /* Preset Scenarios */
-    .preset-row {
+    /* Demo Shortcuts */
+    .shortcut-row {
       display: flex;
       align-items: center;
       gap: 10px;
       margin-top: 1.25rem;
       flex-wrap: wrap;
+      justify-content: center;
     }
 
-    .preset-caption {
-      font-size: 0.76rem;
-      color: var(--text-dim);
+    .shortcut-label {
       font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: var(--text-dim);
       text-transform: uppercase;
       letter-spacing: 0.06em;
-      margin-right: 2px;
     }
 
-    .preset-pill {
-      background: rgba(255, 255, 255, 0.03);
+    .shortcut-chip {
+      background: #1a1815;
       border: 1px solid var(--border);
       color: var(--text-muted);
-      font-size: 0.8rem;
-      padding: 6px 14px;
-      border-radius: var(--radius-full);
+      font-size: 0.78rem;
+      font-family: var(--font-mono);
+      padding: 6px 12px;
+      border-radius: var(--radius-xs);
       cursor: pointer;
       transition: all 0.15s ease;
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      min-height: 36px;
+      gap: 6px;
+      box-shadow: 2px 2px 0px rgba(0,0,0,0.4);
     }
 
-    .preset-pill svg {
-      width: 14px;
-      height: 14px;
-      flex-shrink: 0;
-    }
-
-    .preset-pill:hover {
-      background: rgba(255, 255, 255, 0.07);
+    .shortcut-chip:hover {
+      background: #24221e;
       color: var(--text);
-      border-color: var(--border-highlight);
+      border-color: var(--border-strong);
     }
 
-    .preset-pill.threat:hover {
+    .shortcut-chip.scam:hover {
       border-color: var(--crimson);
       color: var(--crimson);
-      background: var(--crimson-soft);
     }
 
-    .preset-pill.safe:hover {
+    .shortcut-chip.safe:hover {
       border-color: var(--emerald);
       color: var(--emerald);
-      background: var(--emerald-soft);
     }
 
-    /* Live Telemetry Progress Card */
-    .telemetry-deck {
-      display: none;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-cyan);
-      border-radius: var(--radius-lg);
-      padding: 2.25rem 2rem;
-      box-shadow: var(--shadow-ambient), 0 0 50px rgba(0, 240, 255, 0.15);
-      margin-bottom: 2rem;
-      backdrop-filter: blur(28px);
-      animation: expandIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    /* ==============================================================
+       SECTION 02: STICKY HORIZONTAL SCROLL SCAM ANATOMY
+       ============================================================== */
+    .story-scroll-zone {
+      position: relative;
+      height: 380vh; /* Scroll track for horizontal movement */
+      margin-top: 3rem;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
     }
 
-    @keyframes expandIn {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
+    .sticky-viewport {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--bg);
     }
 
-    .telemetry-header {
+    /* Story HUD Bar */
+    .story-hud-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 1.5rem;
+      padding: 1.25rem 2rem;
       border-bottom: 1px solid var(--border);
-      padding-bottom: 1.15rem;
+      background: rgba(12, 11, 10, 0.95);
+      backdrop-filter: blur(20px);
+      z-index: 5;
     }
 
-    .telemetry-tag {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 700;
-      color: var(--cyan);
-      font-size: 1.05rem;
-    }
-
-    .radar-spinner {
-      width: 20px;
-      height: 20px;
-      border: 2px solid rgba(0, 240, 255, 0.2);
-      border-top-color: var(--cyan);
-      border-radius: 50%;
-      animation: spin 0.75s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .telemetry-timer {
-      font-family: var(--font-mono);
-      font-size: 0.95rem;
-      color: var(--cyan);
-      font-variant-numeric: tabular-nums;
-      background: var(--cyan-soft);
-      padding: 4px 10px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border-cyan);
-    }
-
-    .telemetry-list {
+    .story-title-group {
       display: flex;
       flex-direction: column;
-      gap: 14px;
     }
 
-    .t-step {
+    .story-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--amber);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .story-eyebrow-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--amber);
+      box-shadow: 0 0 8px var(--amber);
+    }
+
+    .story-main-title {
+      font-size: 1.35rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+
+    .story-scrub-meter {
       display: flex;
       align-items: center;
       gap: 14px;
       font-family: var(--font-mono);
-      font-size: 0.88rem;
-      color: var(--text-dim);
-      transition: color 0.25s ease;
+      font-size: 0.8rem;
     }
 
-    .t-step.active {
-      color: #ffffff;
-      font-weight: 600;
-    }
-
-    .t-step.done {
-      color: var(--emerald);
-    }
-
-    .t-node {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      border: 1px solid var(--border);
-      background: rgba(0, 0, 0, 0.4);
+    .scrub-box {
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 0.75rem;
-      flex-shrink: 0;
+      gap: 10px;
+      background: #141311;
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: var(--radius-xs);
     }
 
-    .t-step.active .t-node {
-      border-color: var(--cyan);
-      background: var(--cyan-soft);
-      color: var(--cyan);
-      box-shadow: 0 0 10px var(--cyan);
+    .scrub-line {
+      width: 90px;
+      height: 4px;
+      background: #2b2823;
+      border-radius: 2px;
+      overflow: hidden;
     }
 
-    .t-step.done .t-node {
+    .scrub-fill {
+      width: 0%;
+      height: 100%;
+      background: var(--amber);
+      box-shadow: 0 0 8px var(--amber);
+      transition: width 0.1s linear;
+    }
+
+    /* Pinned Canvas with Translating Horizontal Artboard */
+    .artboard-viewport {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+
+    .schematic-artboard {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3600px;
+      height: 100%;
+      will-change: transform;
+    }
+
+    .circuit-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .bus-trace-base {
+      fill: none;
+      stroke: var(--wire-dormant);
+      stroke-width: 3px;
+    }
+
+    .bus-trace-powered {
+      fill: none;
+      stroke: var(--wire-powered);
+      stroke-width: 4px;
+      stroke-linecap: round;
+      filter: drop-shadow(0 0 8px var(--amber));
+    }
+
+    .station-marker-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      fill: var(--text-dim);
+      letter-spacing: 0.05em;
+    }
+
+    /* Story Stations */
+    .stations-wrapper {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .story-card-unit {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 390px;
+      pointer-events: auto;
+      z-index: 2;
+    }
+
+    .story-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-xs);
+      padding: 1.6rem;
+      box-shadow: var(--shadow-hardware);
+      transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+      opacity: 0.65;
+      position: relative;
+    }
+
+    /* Vertical connector stem to wire */
+    .card-stem {
+      position: absolute;
+      left: 50%;
+      width: 2px;
+      background: var(--wire-dormant);
+      transform: translateX(-50%);
+      transition: background 0.4s ease;
+    }
+
+    .story-card-unit[data-placement="above"] {
+      transform: translate(-50%, -105%);
+    }
+    .story-card-unit[data-placement="above"] .card-stem {
+      top: 100%;
+      height: 48px;
+    }
+
+    .story-card-unit[data-placement="below"] {
+      transform: translate(-50%, 5%);
+    }
+    .story-card-unit[data-placement="below"] .card-stem {
+      bottom: 100%;
+      height: 48px;
+    }
+
+    /* Card State: Active */
+    .story-card-unit.active .story-card {
+      opacity: 1;
+      border-color: var(--amber);
+      box-shadow: var(--shadow-hardware), 0 0 35px var(--amber-glow);
+      transform: scale(1.03);
+    }
+    .story-card-unit.active .card-stem {
+      background: var(--amber);
+      box-shadow: 0 0 8px var(--amber);
+    }
+
+    /* Card State: Complete */
+    .story-card-unit.complete .story-card {
+      opacity: 0.95;
       border-color: var(--emerald);
-      background: var(--emerald-soft);
+      box-shadow: var(--shadow-hardware), 0 0 20px var(--emerald-glow);
+    }
+    .story-card-unit.complete .card-stem {
+      background: var(--emerald);
+    }
+
+    .card-hdr-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+    }
+
+    .card-time-stamp {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--amber);
+      letter-spacing: 0.08em;
+    }
+
+    .card-status-badge {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      padding: 2px 7px;
+      border-radius: 2px;
+      background: #141311;
+      color: var(--text-dim);
+      border: 1px solid var(--border);
+      text-transform: uppercase;
+    }
+
+    .story-card-unit.active .card-status-badge {
+      background: var(--amber-dim);
+      color: var(--amber);
+      border-color: var(--amber);
+    }
+
+    .story-card-unit.complete .card-status-badge {
+      background: rgba(0, 214, 143, 0.12);
       color: var(--emerald);
+      border-color: var(--emerald);
     }
 
-    /* Result Dashboard Presentation */
-    .results-deck {
+    .card-heading {
+      font-size: 1.12rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+      color: #ffffff;
+    }
+
+    .card-paragraph {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    .card-quote-box {
+      margin-top: 1rem;
+      background: #100f0d;
+      border-left: 3px solid var(--amber);
+      padding: 8px 12px;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      color: #e5ded2;
+      line-height: 1.4;
+    }
+
+    /* ==============================================================
+       SECTION 03: LIVE RESULTS & EVIDENCE LOCKER
+       ============================================================== */
+    .results-deck-zone {
+      max-width: 1180px;
+      margin: 4rem auto 6rem;
+      padding: 0 1.5rem;
       display: none;
-      margin-top: 1.5rem;
-      animation: slideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+      animation: fadeInDeck 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(24px); }
+    @keyframes fadeInDeck {
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Master Threat Verdict Card */
-    .verdict-banner {
-      border-radius: var(--radius-lg);
+    /* Verdict Card */
+    .verdict-banner-box {
+      border-radius: var(--radius-xs);
       padding: 2.25rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 2rem;
       margin-bottom: 2rem;
-      box-shadow: var(--shadow-ambient);
       flex-wrap: wrap;
-      position: relative;
-      overflow: hidden;
-      backdrop-filter: blur(28px);
+      box-shadow: var(--shadow-hardware);
+      border: 1px solid var(--border-strong);
+      background: var(--bg-panel);
     }
 
-    .verdict-banner.CRITICAL {
-      background: linear-gradient(135deg, rgba(255, 43, 86, 0.16) 0%, rgba(35, 10, 20, 0.85) 100%);
-      border: 1px solid var(--crimson);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 50px var(--crimson-glow);
+    .verdict-banner-box.CRITICAL {
+      background: linear-gradient(135deg, rgba(255, 51, 85, 0.12) 0%, #171012 100%);
+      border-color: var(--crimson);
+      box-shadow: var(--shadow-hardware), 0 0 45px var(--crimson-glow);
     }
 
-    .verdict-banner.SUSPICIOUS {
-      background: linear-gradient(135deg, rgba(255, 170, 0, 0.16) 0%, rgba(35, 25, 10, 0.85) 100%);
-      border: 1px solid var(--amber);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 50px var(--amber-glow);
+    .verdict-banner-box.SUSPICIOUS {
+      background: linear-gradient(135deg, rgba(253, 156, 54, 0.12) 0%, #181410 100%);
+      border-color: var(--amber);
+      box-shadow: var(--shadow-hardware), 0 0 45px var(--amber-glow);
     }
 
-    .verdict-banner.LOW {
-      background: linear-gradient(135deg, rgba(0, 230, 153, 0.16) 0%, rgba(10, 35, 25, 0.85) 100%);
-      border: 1px solid var(--emerald);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 50px var(--emerald-glow);
+    .verdict-banner-box.LOW {
+      background: linear-gradient(135deg, rgba(0, 214, 143, 0.12) 0%, #0f1713 100%);
+      border-color: var(--emerald);
+      box-shadow: var(--shadow-hardware), 0 0 45px var(--emerald-glow);
     }
 
-    .verdict-title-group h2 {
-      font-size: clamp(1.8rem, 3.5vw, 2.4rem);
-      font-weight: 800;
-      letter-spacing: -0.025em;
+    .verdict-left-text h2 {
+      font-size: clamp(1.9rem, 3.8vw, 2.5rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
       margin-bottom: 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 12px;
     }
 
-    .verdict-banner.CRITICAL .verdict-title-group h2 { color: var(--crimson); }
-    .verdict-banner.SUSPICIOUS .verdict-title-group h2 { color: var(--amber); }
-    .verdict-banner.LOW .verdict-title-group h2 { color: var(--emerald); }
+    .verdict-banner-box.CRITICAL .verdict-left-text h2 { color: var(--crimson); }
+    .verdict-banner-box.SUSPICIOUS .verdict-left-text h2 { color: var(--amber); }
+    .verdict-banner-box.LOW .verdict-left-text h2 { color: var(--emerald); }
 
-    .verdict-title-group p {
+    .verdict-left-text p {
       font-size: 1.05rem;
-      color: #cbd5e1;
-      max-width: 620px;
+      color: #cfc8bd;
+      max-width: 640px;
       line-height: 1.6;
     }
 
-    /* 3D Circular Threat Gauge */
-    .gauge-wrapper {
-      position: relative;
-      width: 140px;
-      height: 140px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .gauge-svg {
-      transform: rotate(-90deg);
-      width: 100%;
-      height: 100%;
-    }
-
-    .gauge-track {
-      fill: none;
-      stroke: rgba(255, 255, 255, 0.08);
-      stroke-width: 10;
-    }
-
-    .gauge-fill {
-      fill: none;
-      stroke-width: 10;
-      stroke-linecap: round;
-      stroke-dasharray: 377;
-      stroke-dashoffset: 377;
-      transition: stroke-dashoffset 1.2s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.3s ease;
-    }
-
-    .verdict-banner.CRITICAL .gauge-fill { stroke: var(--crimson); filter: drop-shadow(0 0 10px var(--crimson)); }
-    .verdict-banner.SUSPICIOUS .gauge-fill { stroke: var(--amber); filter: drop-shadow(0 0 10px var(--amber)); }
-    .verdict-banner.LOW .gauge-fill { stroke: var(--emerald); filter: drop-shadow(0 0 10px var(--emerald)); }
-
-    .gauge-center-text {
-      position: absolute;
+    /* Mechanical Rolling Threat Score Box */
+    .rolling-score-chassis {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      background: #080807;
+      border: 1px solid var(--border-strong);
+      padding: 16px 24px;
+      border-radius: var(--radius-xs);
+      box-shadow: var(--shadow-hardware);
     }
 
-    .gauge-score {
+    .score-label {
       font-family: var(--font-mono);
-      font-size: 2.2rem;
+      font-size: 0.7rem;
       font-weight: 800;
-      line-height: 1;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .gauge-label {
-      font-size: 0.68rem;
-      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--text-dim);
-      margin-top: 4px;
+      margin-bottom: 8px;
     }
 
-    /* Victim Emergency Desk (Golden 60 Minutes) */
-    .emergency-desk {
-      background: rgba(255, 43, 86, 0.08);
-      border: 1px solid rgba(255, 43, 86, 0.35);
-      border-radius: var(--radius-md);
+    .score-drums-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .score-digit-drum {
+      width: 36px;
+      height: 52px;
+      background: #141311;
+      border: 1px solid #3d3931;
+      border-radius: 3px;
+      overflow: hidden;
+      font-family: var(--font-mono);
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--amber);
+      line-height: 52px;
+      text-align: center;
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.9);
+    }
+
+    .verdict-banner-box.CRITICAL .score-digit-drum { color: var(--crimson); border-color: rgba(255, 51, 85, 0.4); }
+    .verdict-banner-box.LOW .score-digit-drum { color: var(--emerald); border-color: rgba(0, 214, 143, 0.4); }
+
+    .score-max-tag {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      font-weight: 700;
+      margin-left: 6px;
+    }
+
+    /* Victim Emergency Desk */
+    .emergency-console {
+      background: rgba(255, 51, 85, 0.08);
+      border: 1px solid rgba(255, 51, 85, 0.35);
+      border-radius: var(--radius-xs);
       padding: 1.5rem 1.75rem;
       margin-bottom: 2rem;
-      backdrop-filter: blur(20px);
     }
 
-    .desk-header {
+    .emergency-top-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -690,61 +906,62 @@
       flex-wrap: wrap;
     }
 
-    .desk-title {
+    .emergency-heading {
       font-size: 1.05rem;
-      font-weight: 700;
-      color: #ff94ab;
+      font-weight: 800;
+      color: #ff859d;
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    .lang-toggle {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: var(--radius-full);
-      padding: 3px 6px;
+    .lang-pill-switch {
       display: flex;
-      gap: 4px;
+      background: #141311;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xs);
+      padding: 3px;
     }
 
-    .lang-btn {
+    .lang-toggle-btn {
       background: transparent;
       border: none;
       color: var(--text-muted);
-      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
       font-weight: 600;
       padding: 3px 10px;
-      border-radius: var(--radius-full);
+      border-radius: var(--radius-xs);
       cursor: pointer;
     }
 
-    .lang-btn.active {
-      background: rgba(255, 43, 86, 0.25);
+    .lang-toggle-btn.active {
+      background: rgba(255, 51, 85, 0.25);
       color: #ffffff;
     }
 
-    .desk-content p {
+    .emergency-prose {
       font-size: 0.95rem;
-      color: #ffd0dc;
+      color: #ffd2dc;
       line-height: 1.6;
       margin-bottom: 1.25rem;
     }
 
-    .emergency-actions {
+    .emergency-btns-row {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
     }
 
-    .btn-emergency {
-      background: #ff2b56;
+    .btn-red-action {
+      background: var(--crimson);
       color: #ffffff;
       text-decoration: none;
-      font-size: 0.88rem;
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
       font-weight: 700;
       padding: 10px 18px;
-      border-radius: var(--radius-sm);
+      border-radius: var(--radius-xs);
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -752,118 +969,59 @@
       border: none;
       transition: all 0.2s ease;
       min-height: 44px;
+      box-shadow: 2px 3px 0px rgba(0,0,0,0.5);
     }
 
-    .btn-emergency:hover {
+    .btn-red-action:hover {
       background: #e01d46;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 16px rgba(255, 43, 86, 0.4);
     }
 
-    .btn-emergency-secondary {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+    .btn-neutral-action {
+      background: #1c1a17;
+      border: 1px solid var(--border-strong);
       color: #ffffff;
       text-decoration: none;
-      font-size: 0.88rem;
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
       font-weight: 600;
       padding: 10px 18px;
-      border-radius: var(--radius-sm);
+      border-radius: var(--radius-xs);
       display: inline-flex;
       align-items: center;
       gap: 8px;
       cursor: pointer;
       transition: all 0.2s ease;
       min-height: 44px;
+      box-shadow: 2px 3px 0px rgba(0,0,0,0.4);
     }
 
-    .btn-emergency-secondary:hover {
-      background: rgba(255, 255, 255, 0.12);
-      border-color: rgba(255, 255, 255, 0.3);
+    .btn-neutral-action:hover {
+      background: #25231f;
+      border-color: #555046;
     }
 
-    /* Tabbed Forensic Navigation */
-    .forensic-tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 1.5rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 8px;
-      overflow-x: auto;
-    }
-
-    .tab-btn {
-      background: transparent;
-      border: 1px solid transparent;
-      color: var(--text-muted);
-      font-size: 0.88rem;
-      font-weight: 600;
-      padding: 8px 16px;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      transition: all 0.15s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      white-space: nowrap;
-      min-height: 40px;
-    }
-
-    .tab-btn:hover {
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.03);
-    }
-
-    .tab-btn.active {
-      color: var(--cyan);
-      background: var(--cyan-soft);
-      border-color: var(--border-cyan);
-    }
-
-    .tab-btn svg {
-      width: 16px;
-      height: 16px;
-      stroke: currentColor;
-    }
-
-    /* Tab Panels */
-    .tab-panel {
-      display: none;
-      animation: fadeIn 0.2s ease;
-    }
-
-    .tab-panel.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    /* Core Two-Column Forensic Grid */
-    .evidence-layout {
+    /* Core Two-Column Layout */
+    .results-grid {
       display: grid;
       grid-template-columns: 1.15fr 0.85fr;
-      gap: 1.75rem;
+      gap: 2rem;
     }
 
     @media (max-width: 950px) {
-      .evidence-layout {
+      .results-grid {
         grid-template-columns: 1fr;
       }
     }
 
-    .panel-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
+    .results-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-xs);
       padding: 1.85rem;
-      backdrop-filter: blur(28px);
-      box-shadow: var(--shadow-card);
+      box-shadow: var(--shadow-hardware);
     }
 
-    .panel-title-bar {
+    .card-title-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -872,22 +1030,22 @@
       padding-bottom: 0.85rem;
     }
 
-    .panel-headline {
+    .card-title-bar h3 {
       font-size: 1.05rem;
-      font-weight: 700;
+      font-weight: 800;
       display: flex;
       align-items: center;
       gap: 10px;
     }
 
-    .panel-headline svg {
+    .card-title-bar svg {
       width: 18px;
       height: 18px;
-      stroke: var(--cyan);
+      stroke: var(--amber);
     }
 
     /* Reasons List */
-    .reasons-feed {
+    .reasons-container {
       list-style: none;
       display: flex;
       flex-direction: column;
@@ -895,20 +1053,20 @@
       margin-bottom: 1.75rem;
     }
 
-    .reasons-feed li {
+    .reasons-container li {
       display: flex;
       align-items: flex-start;
       gap: 12px;
       font-size: 0.92rem;
-      color: #e2e8f0;
-      background: rgba(255, 255, 255, 0.025);
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      color: #e2dcd2;
+      background: #141311;
+      border: 1px solid #292621;
       padding: 12px 14px;
-      border-radius: var(--radius-sm);
+      border-radius: var(--radius-xs);
       line-height: 1.55;
     }
 
-    .reasons-feed li svg {
+    .reasons-container li svg {
       width: 17px;
       height: 17px;
       stroke: var(--crimson);
@@ -917,47 +1075,47 @@
     }
 
     /* Telemetry Matrix Grid */
-    .telemetry-matrix {
+    .telemetry-quad {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 12px;
     }
 
-    .metric-box {
-      background: rgba(8, 12, 19, 0.7);
+    .quad-cell {
+      background: #0f0e0c;
       border: 1px solid var(--border);
-      padding: 14px;
-      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      border-radius: var(--radius-xs);
     }
 
-    .metric-tag {
-      font-size: 0.72rem;
+    .quad-label {
       font-family: var(--font-mono);
+      font-size: 0.7rem;
       color: var(--text-dim);
       text-transform: uppercase;
       letter-spacing: 0.06em;
-      margin-bottom: 5px;
+      margin-bottom: 4px;
     }
 
-    .metric-value {
+    .quad-val {
       font-weight: 700;
       font-size: 0.96rem;
       color: var(--text);
       word-break: break-word;
     }
 
-    /* 3D Interactive Device Frame */
+    /* 3D Phone Chassis */
     .device-stage {
       perspective: 1200px;
       margin-top: 0.5rem;
     }
 
-    .device-chassis {
+    .device-mockup {
       position: relative;
-      border-radius: 22px;
+      border-radius: 20px;
       background: #030407;
-      border: 2px solid rgba(255, 255, 255, 0.14);
-      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.85), 0 0 30px rgba(0, 240, 255, 0.12);
+      border: 2px solid #3d3931;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.85);
       transform-style: preserve-3d;
       transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
       transform: rotateX(4deg) rotateY(-3deg);
@@ -965,15 +1123,14 @@
       overflow: hidden;
     }
 
-    .device-chassis:hover {
+    .device-mockup:hover {
       transform: rotateX(0deg) rotateY(0deg) scale(1.02);
-      border-color: rgba(0, 240, 255, 0.5);
-      box-shadow: 0 40px 90px rgba(0, 0, 0, 0.95), 0 0 50px rgba(0, 240, 255, 0.3);
+      border-color: var(--amber);
     }
 
     .device-glare {
       position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
+      inset: 0;
       pointer-events: none;
       background: radial-gradient(circle 350px at var(--glare-x, 50%) var(--glare-y, 50%), rgba(255, 255, 255, 0.12), transparent 70%);
       z-index: 2;
@@ -992,7 +1149,7 @@
       border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-    .device-chassis img {
+    .device-mockup img {
       width: 100%;
       height: 380px;
       object-fit: cover;
@@ -1001,154 +1158,91 @@
       background: #05070c;
     }
 
-    /* Section 63 BSA Tamper Seal Badge */
-    .bsa-cert-box {
+    /* Section 63 BSA Hash Box */
+    .bsa-hash-box {
       margin-top: 1.25rem;
-      background: rgba(8, 12, 19, 0.85);
+      background: #0d0c0a;
       border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
+      border-radius: var(--radius-xs);
       padding: 12px 14px;
     }
 
-    .bsa-cert-header {
+    .bsa-hash-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 6px;
     }
 
-    .bsa-cert-label {
-      font-size: 0.74rem;
+    .bsa-hash-title {
       font-family: var(--font-mono);
+      font-size: 0.74rem;
       font-weight: 700;
-      color: var(--cyan);
+      color: var(--amber);
       letter-spacing: 0.05em;
       text-transform: uppercase;
     }
 
-    .btn-copy-hash {
+    .btn-hash-copy {
       background: transparent;
       border: none;
       color: var(--text-dim);
       cursor: pointer;
-      font-size: 0.74rem;
       font-family: var(--font-mono);
+      font-size: 0.74rem;
       display: inline-flex;
       align-items: center;
       gap: 4px;
     }
 
-    .btn-copy-hash:hover {
+    .btn-hash-copy:hover {
       color: var(--text);
     }
 
-    .hash-string {
+    .bsa-sha-string {
       font-family: var(--font-mono);
       font-size: 0.74rem;
-      color: #94a3b8;
+      color: #9e978b;
       word-break: break-all;
       line-height: 1.4;
     }
 
-    .cert-actions {
+    .cert-actions-row {
       display: flex;
       gap: 8px;
       margin-top: 10px;
     }
 
-    .btn-cert-action {
+    .btn-cert-download {
       flex: 1;
-      background: rgba(255, 255, 255, 0.03);
+      background: #141311;
       border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
+      border-radius: var(--radius-xs);
       color: var(--text-muted);
-      font-size: 0.78rem;
-      padding: 7px;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      padding: 8px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      transition: all 0.15s ease;
       text-decoration: none;
+      transition: all 0.15s ease;
     }
 
-    .btn-cert-action:hover {
-      background: rgba(255, 255, 255, 0.08);
+    .btn-cert-download:hover {
+      background: #1f1d19;
       color: var(--text);
-      border-color: var(--border-highlight);
+      border-color: var(--border-strong);
     }
 
-    /* Hop Chain Visualizer (Tab 2) */
-    .hop-timeline {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      position: relative;
-      padding-left: 20px;
-    }
-
-    .hop-timeline::before {
-      content: '';
-      position: absolute;
-      top: 12px;
-      bottom: 12px;
-      left: 7px;
-      width: 2px;
-      background: var(--border);
-    }
-
-    .hop-item {
-      position: relative;
-      background: rgba(8, 12, 19, 0.7);
-      border: 1px solid var(--border);
-      padding: 14px 18px;
-      border-radius: var(--radius-sm);
-    }
-
-    .hop-item::before {
-      content: '';
-      position: absolute;
-      top: 18px;
-      left: -20px;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: var(--cyan);
-      border: 2px solid var(--bg);
-      box-shadow: 0 0 8px var(--cyan);
-    }
-
-    .hop-status-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 6px;
-    }
-
-    .hop-code {
-      font-family: var(--font-mono);
-      font-size: 0.76rem;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 4px;
-      background: rgba(0, 240, 255, 0.1);
-      color: var(--cyan);
-      border: 1px solid var(--border-cyan);
-    }
-
-    .hop-url {
-      font-family: var(--font-mono);
-      font-size: 0.85rem;
-      color: #e2e8f0;
-      word-break: break-all;
-    }
-
-    /* Terminal JSON Viewer */
-    .terminal-box {
-      background: rgba(4, 7, 12, 0.95);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
+    /* Terminal JSON View */
+    .terminal-drawer {
+      margin-top: 2rem;
+      background: #080807;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-xs);
       overflow: hidden;
     }
 
@@ -1157,60 +1251,29 @@
       align-items: center;
       justify-content: space-between;
       padding: 10px 16px;
-      background: rgba(255, 255, 255, 0.02);
+      background: #141311;
       border-bottom: 1px solid var(--border);
-    }
-
-    .terminal-title {
       font-family: var(--font-mono);
       font-size: 0.78rem;
       color: var(--text-dim);
     }
 
-    pre.terminal-content {
+    pre.terminal-raw {
       font-family: var(--font-mono);
       font-size: 0.82rem;
       padding: 18px;
       overflow-x: auto;
       color: #9cb3d5;
       line-height: 1.5;
-      max-height: 480px;
+      max-height: 380px;
     }
 
-    /* Toast Notification */
-    .toast-pill {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: rgba(13, 18, 28, 0.95);
-      border: 1px solid var(--cyan);
-      color: #ffffff;
-      padding: 10px 18px;
-      border-radius: var(--radius-full);
-      font-size: 0.84rem;
-      font-weight: 600;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px var(--cyan-glow);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transform: translateY(100px);
-      opacity: 0;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      z-index: 200;
-    }
-
-    .toast-pill.visible {
-      transform: translateY(0);
-      opacity: 1;
-    }
-
-    /* Fullscreen Inspector Modal */
-    .inspector-modal {
+    /* Lightbox Modal */
+    .lightbox-modal {
       display: none;
       position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: rgba(3, 5, 8, 0.94);
+      inset: 0;
+      background: rgba(8, 8, 7, 0.94);
       backdrop-filter: blur(16px);
       z-index: 300;
       align-items: center;
@@ -1218,27 +1281,26 @@
       padding: 2rem;
     }
 
-    .inspector-modal.open {
+    .lightbox-modal.open {
       display: flex;
     }
 
-    .modal-viewport {
+    .lightbox-frame {
       max-width: 90vw;
       max-height: 90vh;
       overflow: auto;
-      border-radius: 16px;
-      border: 1px solid var(--border-cyan);
-      box-shadow: 0 30px 100px rgba(0, 0, 0, 0.9);
+      border-radius: 12px;
+      border: 1px solid var(--border-accent);
       background: #000;
       position: relative;
     }
 
-    .modal-viewport img {
+    .lightbox-frame img {
       max-width: 100%;
       display: block;
     }
 
-    .modal-close-btn {
+    .lightbox-close-btn {
       position: absolute;
       top: 14px;
       right: 14px;
@@ -1253,230 +1315,433 @@
       justify-content: center;
       cursor: pointer;
       font-size: 1.1rem;
-      backdrop-filter: blur(8px);
+    }
+
+    /* Ephemeral Toast */
+    .toast-pill {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1c1a17;
+      border: 1px solid var(--amber);
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: var(--radius-xs);
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      box-shadow: var(--shadow-hardware);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 400;
+    }
+
+    .toast-pill.visible {
+      transform: translateY(0);
+      opacity: 1;
     }
 
     /* Footer */
     footer {
-      margin-top: auto;
       text-align: center;
-      font-size: 0.82rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
       color: var(--text-dim);
-      padding: 2.5rem 0 1rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      padding: 3.5rem 1.5rem 2.5rem;
+      border-top: 1px solid var(--border);
     }
 
-    footer a {
-      color: var(--cyan);
-      text-decoration: none;
-    }
-
-    /* Reduced Motion */
-    @media (prefers-reduced-motion: reduce) {
-      *, ::before, ::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
+    /* Mobile adjustments */
+    @media (max-width: 768px) {
+      .hero-zone h1 {
+        font-size: 2.2rem;
       }
-      .device-chassis {
-        transform: none !important;
+      .mechanical-clock-container {
+        flex-direction: column;
+        gap: 8px;
       }
-      #ambientCanvas {
-        display: none !important;
+      .console-input-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .btn-detonate-action {
+        width: 100%;
+        justify-content: center;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- 3D Interactive Cyber-Horizon Canvas -->
-  <canvas id="ambientCanvas"></canvas>
+  <!-- Subtle CRT Scanline Filter -->
+  <div class="crt-texture"></div>
 
-  <div class="container">
+  <div class="wrap">
     
-    <!-- Top HUD Navigation -->
+    <!-- Top HUD Header -->
     <header>
-      <a href="/" class="brand-link">
-        <div class="brand-badge-box">
+      <a href="/" class="brand-box">
+        <div class="brand-stamp">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
             <path d="m9 12 2 2 4-4"/>
           </svg>
         </div>
-        <div class="brand-title">
-          ScamTrace <span class="tag-seal">SEC. 63 BSA CERTIFIED</span>
+        <div class="brand-titles">
+          <div class="brand-name">ScamTrace</div>
+          <div class="brand-tag">SEC. 63 BSA FORENSIC ENGINE</div>
         </div>
       </a>
 
-      <div class="hud-controls">
-        <button class="sound-btn" id="soundToggle" aria-label="Toggle Forensic Sound FX">
+      <div class="top-telemetry">
+        <button class="audio-toggle-btn active" id="btnAudioToggle">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
             <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
           </svg>
-          <span id="soundLabel">AUDIO: ON</span>
+          <span id="audioStatusText">AUDIO: ON</span>
         </button>
 
-        <div class="hud-chip">
-          <div class="chip-indicator"></div>
-          <span id="hudStatus">SANDBOX READY</span>
+        <div class="hud-stat">
+          <div class="hud-dot"></div>
+          <span id="liveStatusText">SANDBOX ARMED</span>
         </div>
       </div>
     </header>
 
-    <!-- Main Presentation Hero -->
-    <section class="hero">
-      <h1>Detonate suspicious links. Preserve court evidence.</h1>
-      <p>Instant forensic detonate sandbox for fraudulent SMS links, WhatsApp scams, and malicious payment gateways. Compute verifiable Section 63 BSA cryptographic seals and lock stolen funds in the golden 60 minutes.</p>
+    <!-- SECTION 01: HERO & MECHANICAL ROLLING COUNTER -->
+    <section class="hero-zone">
+      <div class="era-stamp">
+        <span>◆ THE FIRST-HOUR FRAUD INTERVENTION ENGINE ◆ GOLDEN 60 MINUTES ◆</span>
+      </div>
+      <h1>Every Second Counts.<br><span>Stop The Fraud.</span></h1>
+      <p>Received a suspicious WhatsApp link, electricity disconnection SMS, or bank KYC update? Detonate it safely in an isolated sandbox, compute court-admissible Section 63 BSA evidence, and freeze money-mule accounts before cash withdrawal.</p>
+
+      <!-- Mechanical Rolling Clock -->
+      <div class="mechanical-clock-container">
+        <div class="clock-title">GOLDEN HOUR<br>INTERVENTION CLOCK</div>
+        <div class="clock-drums">
+          <div class="digit-drum"><div class="drum-strip" id="drum-min-1"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></div>
+          <div class="digit-drum"><div class="drum-strip" id="drum-min-2"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div></div>
+          <div class="drum-sep">:</div>
+          <div class="digit-drum"><div class="drum-strip" id="drum-sec-1"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></div>
+          <div class="digit-drum"><div class="drum-strip" id="drum-sec-2"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div></div>
+        </div>
+      </div>
+
+      <!-- Triage Command Console -->
+      <div class="triage-console">
+        <div class="console-input-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input 
+            type="url" 
+            id="targetLinkInput" 
+            placeholder="Paste suspicious SMS link, WhatsApp URL, or payment gateway..." 
+            autocomplete="off" 
+            spellcheck="false"
+          >
+          <button class="btn-detonate-action" id="btnDetonate">
+            <span id="btnDetonateLabel">Detonate & Triage</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Shortcuts -->
+        <div class="shortcut-row">
+          <span class="shortcut-label">Instant Scenarios:</span>
+          <button class="shortcut-chip scam" onclick="loadShortcut('electricity')">
+            <span>🚨 Electricity Disconnection Bill (Demo)</span>
+          </button>
+          <button class="shortcut-chip safe" onclick="loadShortcut('sbi')">
+            <span>🏦 State Bank of India (Official)</span>
+          </button>
+          <button class="shortcut-chip safe" onclick="loadShortcut('bescom')">
+            <span>⚡ BESCOM Portal (Official)</span>
+          </button>
+        </div>
+      </div>
     </section>
 
-    <!-- Command Console Input Deck -->
-    <section class="command-deck" aria-label="Investigation Console">
-      <div class="input-shell">
-        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="8"/>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </svg>
-        <input 
-          type="url" 
-          id="targetUrl" 
-          placeholder="Paste suspect URL (e.g., electricity bill SMS, bank APK link, fake KYC)..." 
-          autocomplete="off" 
-          spellcheck="false"
-        >
-        <button class="clear-btn" id="clearBtn" aria-label="Clear link input">&times;</button>
-        <button class="btn-detonate" id="btnDetonate">
-          <span id="detonateBtnText">Detonate Link</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
-          </svg>
-        </button>
-      </div>
+    <!-- ==============================================================
+         SECTION 02: STICKY HORIZONTAL SCROLL SCAM ANATOMY
+         ============================================================== -->
+    <section class="story-scroll-zone" id="storyZone">
+      <div class="sticky-viewport">
+        
+        <!-- Story HUD Bar -->
+        <div class="story-hud-bar">
+          <div class="story-title-group">
+            <div class="story-eyebrow">
+              <div class="story-eyebrow-dot"></div>
+              <span>02 / THE ANATOMY OF A CYBER HEIST</span>
+            </div>
+            <div class="story-main-title">How ₹50,000 Evaporates in 60 Minutes</div>
+          </div>
 
-      <!-- Quick Test Targets -->
-      <div class="preset-row">
-        <span class="preset-caption">Test Scenario:</span>
-        <button class="preset-pill threat" onclick="loadPreset('mock-upi')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-          </svg>
-          <span>Electricity Bill Scam (Demo)</span>
-        </button>
-        <button class="preset-pill safe" onclick="loadPreset('sbi')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="10" width="18" height="11" rx="2" ry="2"></rect>
-            <path d="M7 10V7a5 5 0 0 1 10 0v3"></path>
-          </svg>
-          <span>State Bank of India (Official)</span>
-        </button>
-        <button class="preset-pill safe" onclick="loadPreset('bescom')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18 20V10"></path>
-            <path d="M12 20V4"></path>
-            <path d="M6 20v-6"></path>
-          </svg>
-          <span>BESCOM Portal (Official)</span>
-        </button>
-      </div>
-    </section>
-
-    <!-- Live Telemetry Radar (Active During Scan) -->
-    <div class="telemetry-deck" id="telemetryDeck" aria-live="polite">
-      <div class="telemetry-header">
-        <div class="telemetry-tag">
-          <div class="radar-spinner"></div>
-          <span>Active Forensic Sandbox Detonation</span>
-        </div>
-        <div class="telemetry-timer" id="telemetryTimer">0.00s</div>
-      </div>
-      <div class="telemetry-list">
-        <div class="t-step active" id="t-ssrf">
-          <div class="t-node">1</div>
-          <span>SSRF Firewall: Enforcing packet isolation & rejecting 127.0.0.1 / cloud metadata...</span>
-        </div>
-        <div class="t-step" id="t-sandbox">
-          <div class="t-node">2</div>
-          <span>Headless Emulation: Spawning Android Pixel 7 sandboxed Chromium browser...</span>
-        </div>
-        <div class="t-step" id="t-vision">
-          <div class="t-node">3</div>
-          <span>Groq Vision LPU: Extracting impersonated brands, stolen logos & urgency triggers...</span>
-        </div>
-        <div class="t-step" id="t-domain">
-          <div class="t-node">4</div>
-          <span>RDAP & WHOIS Engine: Verifying registration lifecycle & apex domain age...</span>
-        </div>
-        <div class="t-step" id="t-score">
-          <div class="t-node">5</div>
-          <span>Cryptographic Seal: Computing Section 63 BSA SHA-256 seal & risk index...</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Results Presentation Locker -->
-    <div class="results-deck" id="resultsDeck">
-      
-      <!-- Threat Verdict Banner -->
-      <section class="verdict-banner" id="verdictBanner">
-        <div class="verdict-title-group">
-          <h2 id="verdictHeadline">CRITICAL: 100/100</h2>
-          <p id="verdictSummary">High-conviction fraudulent site detected. Actively configured to harvest banking credentials and UPI authorizations.</p>
-        </div>
-
-        <div class="gauge-wrapper">
-          <svg class="gauge-svg" viewBox="0 0 140 140">
-            <circle class="gauge-track" cx="70" cy="70" r="60"></circle>
-            <circle class="gauge-fill" id="gaugeFill" cx="70" cy="70" r="60"></circle>
-          </svg>
-          <div class="gauge-center-text">
-            <span class="gauge-score" id="gaugeScore">100</span>
-            <span class="gauge-label">RISK INDEX</span>
+          <div class="story-scrub-meter">
+            <div class="scrub-box">
+              <span style="color: var(--amber); font-weight: 800;" id="timelinePercent">CURRENT: 0%</span>
+              <div class="scrub-line">
+                <div class="scrub-fill" id="scrubFillBar"></div>
+              </div>
+            </div>
+            <div>
+              <span id="stageCheckpointLabel">PHASE <strong>01</strong> / 06</span>
+            </div>
           </div>
         </div>
-      </section>
 
-      <!-- Victim Emergency Protocol (Shown for Critical/Suspicious) -->
-      <section class="emergency-desk" id="emergencyDesk">
-        <div class="desk-header">
-          <div class="desk-title">
+        <!-- Horizontal Translating Artboard -->
+        <div class="artboard-viewport">
+          <div class="schematic-artboard" id="schematicArtboard">
+            
+            <!-- SVG Circuit Schematic -->
+            <svg class="circuit-svg" viewBox="0 0 3600 650" preserveAspectRatio="none">
+              <!-- Base Dormant Bus Wire -->
+              <path d="M 50 325 L 3550 325" class="bus-trace-base"></path>
+              
+              <!-- Powered Glowing Wire -->
+              <path id="poweredWire" d="M 50 325 L 3550 325" class="bus-trace-powered" stroke-dasharray="3500" stroke-dashoffset="3500"></path>
+
+              <!-- Node 1 (00:00 - The Lure) -->
+              <g transform="translate(300, 325)">
+                <circle cx="0" cy="0" r="7" fill="#fd9c36"></circle>
+                <circle cx="0" cy="0" r="14" fill="none" stroke="rgba(253,156,54,0.3)" stroke-width="2"></circle>
+                <path d="M 0 0 L 0 -48" stroke="#38342c" stroke-width="2"></path>
+                <text x="-40" y="-55" class="station-marker-label">T0 / THE_LURE</text>
+              </g>
+
+              <!-- Node 2 (00:02 - The Forgery) -->
+              <g transform="translate(900, 325)">
+                <circle cx="0" cy="0" r="7" fill="#38342c" id="circ-node-2"></circle>
+                <circle cx="0" cy="0" r="14" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2" id="circ-ring-2"></circle>
+                <path d="M 0 0 L 0 48" stroke="#38342c" stroke-width="2"></path>
+                <text x="-45" y="65" class="station-marker-label">T2 / CLONED_PORTAL</text>
+              </g>
+
+              <!-- Node 3 (00:05 - The Harvest) -->
+              <g transform="translate(1500, 325)">
+                <circle cx="0" cy="0" r="7" fill="#38342c" id="circ-node-3"></circle>
+                <circle cx="0" cy="0" r="14" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2" id="circ-ring-3"></circle>
+                <path d="M 0 0 L 0 -48" stroke="#38342c" stroke-width="2"></path>
+                <text x="-45" y="-55" class="station-marker-label">T5 / PIN_HARVEST</text>
+              </g>
+
+              <!-- Node 4 (00:15 - The Mule Chain) -->
+              <g transform="translate(2100, 325)">
+                <circle cx="0" cy="0" r="7" fill="#38342c" id="circ-node-4"></circle>
+                <circle cx="0" cy="0" r="14" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2" id="circ-ring-4"></circle>
+                <path d="M 0 0 L 0 48" stroke="#38342c" stroke-width="2"></path>
+                <text x="-45" y="65" class="station-marker-label">T15 / MULE_SIPHON</text>
+              </g>
+
+              <!-- Node 5 (00:25 - The Evidence Seal) -->
+              <g transform="translate(2700, 325)">
+                <circle cx="0" cy="0" r="7" fill="#38342c" id="circ-node-5"></circle>
+                <circle cx="0" cy="0" r="14" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2" id="circ-ring-5"></circle>
+                <path d="M 0 0 L 0 -48" stroke="#38342c" stroke-width="2"></path>
+                <text x="-45" y="-55" class="station-marker-label">T25 / BSA_SEAL</text>
+              </g>
+
+              <!-- Node 6 (00:45 - The Shield) -->
+              <g transform="translate(3300, 325)">
+                <circle cx="0" cy="0" r="7" fill="#38342c" id="circ-node-6"></circle>
+                <circle cx="0" cy="0" r="14" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2" id="circ-ring-6"></circle>
+                <path d="M 0 0 L 0 48" stroke="#38342c" stroke-width="2"></path>
+                <text x="-45" y="65" class="station-marker-label">T45 / 1930_FREEZE</text>
+              </g>
+            </svg>
+
+            <!-- Stations Along Artboard -->
+            <div class="stations-wrapper">
+              
+              <!-- STATION 1 -->
+              <div class="story-card-unit active" style="left: 300px;" data-placement="above" id="story-unit-1">
+                <div class="story-card">
+                  <div class="card-hdr-row">
+                    <span class="card-time-stamp">MINUTE 00:00 &bull; THE LURE</span>
+                    <span class="card-status-badge">PSYCHOLOGICAL TRAP</span>
+                  </div>
+                  <div class="card-heading">The Panic SMS / WhatsApp Alert</div>
+                  <div class="card-paragraph">
+                    Fraudsters blast millions of bulk automated SMS messages creating artificial panic: imminent power disconnection, bank account suspension, or lottery prize deadlines.
+                  </div>
+                  <div class="card-quote-box">
+                    "Dear Consumer, your electricity bill is unpaid. Power supply will be disconnected tonight at 9:30 PM. Update now at: http://..."
+                  </div>
+                </div>
+                <div class="card-stem"></div>
+              </div>
+
+              <!-- STATION 2 -->
+              <div class="story-card-unit" style="left: 900px;" data-placement="below" id="story-unit-2">
+                <div class="story-card">
+                  <div class="card-hdr-row">
+                    <span class="card-time-stamp">MINUTE 00:02 &bull; THE FORGERY</span>
+                    <span class="card-status-badge">DISPOSABLE DOMAIN</span>
+                  </div>
+                  <div class="card-heading">The Spoofed Portal Clone</div>
+                  <div class="card-paragraph">
+                    The link routes through temporary 302 redirects to a brand-new domain registered 48 hours ago. It copies genuine bank/utility logos and colors to fool the victim.
+                  </div>
+                  <div class="card-quote-box">
+                    Apex Domain: power-bill-payment.xyz<br>
+                    Registration: 2 Days Old &bull; SSL Cloned
+                  </div>
+                </div>
+                <div class="card-stem"></div>
+              </div>
+
+              <!-- STATION 3 -->
+              <div class="story-card-unit" style="left: 1500px;" data-placement="above" id="story-unit-3">
+                <div class="story-card">
+                  <div class="card-hdr-row">
+                    <span class="card-time-stamp">MINUTE 00:05 &bull; THE HARVEST</span>
+                    <span class="card-status-badge">CREDENTIAL EXTRACTION</span>
+                  </div>
+                  <div class="card-heading">UPI PIN & OTP Extraction</div>
+                  <div class="card-paragraph">
+                    The victim is asked to pay a nominal "₹10 verification charge". In reality, the form steals their mobile number, consumer ID, and secret UPI PIN.
+                  </div>
+                  <div class="card-quote-box">
+                    Inputs Harvested: [UPI PIN], [Mobile Number], [Card CVV]
+                  </div>
+                </div>
+                <div class="card-stem"></div>
+              </div>
+
+              <!-- STATION 4 -->
+              <div class="story-card-unit" style="left: 2100px;" data-placement="below" id="story-unit-4">
+                <div class="story-card">
+                  <div class="card-hdr-row">
+                    <span class="card-time-stamp">MINUTE 00:15 &bull; THE MULE CHAIN</span>
+                    <span class="card-status-badge">RAPID SIPHON</span>
+                  </div>
+                  <div class="card-heading">Layered Money Mule Siphon</div>
+                  <div class="card-paragraph">
+                    Funds are unauthorizedly debited via API and immediately scattered across 5–10 mule bank accounts across different states to obstruct recovery.
+                  </div>
+                  <div class="card-quote-box">
+                    Destination: Tier-1 Mule Account &rarr; Tier-2 Split &rarr; Pending Cash Out
+                  </div>
+                </div>
+                <div class="card-stem"></div>
+              </div>
+
+              <!-- STATION 5 -->
+              <div class="story-card-unit" style="left: 2700px;" data-placement="above" id="story-unit-5">
+                <div class="story-card">
+                  <div class="card-hdr-row">
+                    <span class="card-time-stamp">MINUTE 00:25 &bull; THE EVIDENCE SEAL</span>
+                    <span class="card-status-badge">SCAMTRACE INTERCEPT</span>
+                  </div>
+                  <div class="card-heading">Court-Admissible Sec. 63 BSA Seal</div>
+                  <div class="card-paragraph">
+                    ScamTrace detonates the malicious URL in a hardened sandbox, snapshots the proof, and computes a SHA-256 cryptographic seal compliant with Bharatiya Sakshya Adhiniyam, 2023.
+                  </div>
+                  <div class="card-quote-box">
+                    SHA-256: 12f869a005b1a38b21c2883edaeee7aae95e7e... (Tamper-Proof)
+                  </div>
+                </div>
+                <div class="card-stem"></div>
+              </div>
+
+              <!-- STATION 6 -->
+              <div class="story-card-unit" style="left: 3300px;" data-placement="below" id="story-unit-6">
+                <div class="story-card">
+                  <div class="card-hdr-row">
+                    <span class="card-time-stamp">MINUTE 00:45 &bull; THE INTERVENTION</span>
+                    <span class="card-status-badge">FUNDS SECURED</span>
+                  </div>
+                  <div class="card-heading">1930 & RBI Bank Lien Freeze</div>
+                  <div class="card-paragraph">
+                    Armed with the forensic evidence hash, the victim dials 1930 and serves an official RBI Lien Notice to freeze the mule account before ATM withdrawal.
+                  </div>
+                  <div class="card-quote-box">
+                    Action: Immediate Lien Hold Placed &bull; Money Saved
+                  </div>
+                </div>
+                <div class="card-stem"></div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==============================================================
+         SECTION 03: LIVE RESULTS & EVIDENCE LOCKER
+         ============================================================== -->
+    <section class="results-deck-zone" id="resultsDeckZone">
+      
+      <!-- Master Verdict Card -->
+      <div class="verdict-banner-box" id="verdictBannerBox">
+        <div class="verdict-left-text">
+          <h2 id="verdictHeading">CRITICAL: 90/100</h2>
+          <p id="verdictDetail">High-conviction fraudulent site detected. Actively configured to harvest UPI PIN and banking credentials.</p>
+        </div>
+
+        <!-- Mechanical Rolling Threat Score Box -->
+        <div class="rolling-score-chassis">
+          <div class="score-label">THREAT SCORE</div>
+          <div class="score-drums-row">
+            <div class="score-digit-drum"><div class="drum-strip" id="score-drum-1"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div></div>
+            <div class="score-digit-drum"><div class="drum-strip" id="score-drum-2"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div></div>
+            <span class="score-max-tag">/100</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Victim Emergency Console -->
+      <div class="emergency-console" id="emergencyConsole">
+        <div class="emergency-top-row">
+          <div class="emergency-heading">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="10"></circle>
               <line x1="12" y1="8" x2="12" y2="12"></line>
               <line x1="12" y1="16" x2="12.01" y2="16"></line>
             </svg>
-            <span id="emergencyTitle">Victim Emergency Protocol (Golden 60 Minutes)</span>
+            <span id="emergencyTitleLabel">Victim Emergency Protocol (Golden 60 Minutes)</span>
           </div>
-          <div class="lang-toggle">
-            <button class="lang-btn active" id="btnLangEn" onclick="switchLang('en')">English</button>
-            <button class="lang-btn" id="btnLangHi" onclick="switchLang('hi')">हिंदी</button>
+          <div class="lang-pill-switch">
+            <button class="lang-toggle-btn active" id="btnLangEn" onclick="switchAdvisoryLang('en')">English</button>
+            <button class="lang-toggle-btn" id="btnLangHi" onclick="switchAdvisoryLang('hi')">हिंदी</button>
           </div>
         </div>
 
-        <div class="desk-content" id="deskContent">
-          <p id="emergencyText">
-            <strong>Do not authorize transactions or enter UPI PINs.</strong> If funds were already transferred, immediately demand an account lien/freeze with your bank's fraud nodal officer and report to the National Cybercrime Portal within 60 minutes to prevent cash withdrawal by the mule ring.
-          </p>
+        <div class="emergency-prose" id="emergencyProse">
+          <strong>Do not authorize transactions or enter your UPI PIN.</strong> If funds were already transferred, immediately demand an account lien/freeze with your bank's fraud nodal officer and report to the National Cybercrime Portal within 60 minutes to prevent cash withdrawal by the mule ring.
         </div>
 
-        <div class="emergency-actions">
-          <a href="tel:1930" class="btn-emergency">
+        <div class="emergency-btns-row">
+          <a href="tel:1930" class="btn-red-action">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
             </svg>
-            <span>Dial Cybercrime Helpline 1930</span>
+            <span>Dial Helpline 1930</span>
           </a>
 
-          <button class="btn-emergency-secondary" onclick="copyFreezeNotice()">
+          <button class="btn-neutral-action" onclick="copyFreezeDraftNotice()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
               <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
             </svg>
-            <span>Copy Bank Lien Notice Draft</span>
+            <span>Copy Bank Lien Notice</span>
           </button>
 
-          <a href="https://cybercrime.gov.in" target="_blank" rel="noopener noreferrer" class="btn-emergency-secondary">
+          <a href="https://cybercrime.gov.in" target="_blank" rel="noopener noreferrer" class="btn-neutral-action">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
               <polyline points="15 3 21 3 21 9"></polyline>
@@ -1485,397 +1750,389 @@
             <span>Cybercrime.gov.in</span>
           </a>
         </div>
-      </section>
-
-      <!-- Forensic Tabs Selector -->
-      <nav class="forensic-tabs" aria-label="Forensic Evidence Sections">
-        <button class="tab-btn active" onclick="setTab('analysis')">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-            <polyline points="2 17 12 22 22 17"></polyline>
-            <polyline points="2 12 12 17 22 12"></polyline>
-          </svg>
-          <span>Threat Analysis</span>
-        </button>
-
-        <button class="tab-btn" onclick="setTab('device')">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
-            <line x1="12" y1="18" x2="12.01" y2="18"></line>
-          </svg>
-          <span>3D Device Evidence</span>
-        </button>
-
-        <button class="tab-btn" onclick="setTab('hops')">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="18" cy="5" r="3"></circle>
-            <circle cx="6" cy="12" r="3"></circle>
-            <circle cx="18" cy="19" r="3"></circle>
-            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-          </svg>
-          <span>Redirect Chain</span>
-        </button>
-
-        <button class="tab-btn" onclick="setTab('dossier')">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="4 17 10 11 4 5"></polyline>
-            <line x1="12" y1="19" x2="20" y2="19"></line>
-          </svg>
-          <span>Sec. 63 BSA JSON Dossier</span>
-        </button>
-      </nav>
-
-      <!-- TAB 1: Core Threat Analysis -->
-      <div class="tab-panel active" id="tab-analysis">
-        <div class="evidence-layout">
-          
-          <!-- Left: Diagnostic Findings -->
-          <div class="panel-card">
-            <div class="panel-title-bar">
-              <div class="panel-headline">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                  <line x1="12" y1="9" x2="12" y2="13"></line>
-                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                </svg>
-                <span>Forensic Risk Indicators</span>
-              </div>
-              <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-dim);" id="analysisLatency">--ms Latency</span>
-            </div>
-
-            <ul class="reasons-feed" id="reasonsFeed">
-              <!-- Rendered via JS -->
-            </ul>
-
-            <!-- Signal Badges Grid -->
-            <div class="telemetry-matrix">
-              <div class="metric-box">
-                <div class="metric-tag">Impersonated Brand</div>
-                <div class="metric-value" id="valBrand">--</div>
-              </div>
-              <div class="metric-box">
-                <div class="metric-tag">Registration Age</div>
-                <div class="metric-value" id="valAge">--</div>
-              </div>
-              <div class="metric-box">
-                <div class="metric-tag">HTTP Redirections</div>
-                <div class="metric-value" id="valHops">--</div>
-              </div>
-              <div class="metric-box">
-                <div class="metric-tag">Sensitive Harvested Inputs</div>
-                <div class="metric-value" id="valFields">--</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Right: 3D Isometric Device Showcase -->
-          <div class="panel-card">
-            <div class="panel-title-bar">
-              <div class="panel-headline">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
-                  <line x1="12" y1="18" x2="12.01" y2="18"></line>
-                </svg>
-                <span>Captured Mobile Sandbox Evidence</span>
-              </div>
-              <button class="btn-copy-hash" onclick="openInspector()">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                  <line x1="11" y1="8" x2="11" y2="14"></line>
-                  <line x1="8" y1="11" x2="14" y2="11"></line>
-                </svg>
-                <span>Inspect</span>
-              </button>
-            </div>
-
-            <div class="device-stage">
-              <div class="device-chassis" id="deviceChassis" onclick="openInspector()">
-                <div class="device-glare"></div>
-                <div class="device-notch"></div>
-                <img id="deviceScreenshot" src="" alt="Forensic Screenshot Proof">
-              </div>
-            </div>
-
-            <!-- Section 63 BSA Hash Certificate Box -->
-            <div class="bsa-cert-box">
-              <div class="bsa-cert-header">
-                <span class="bsa-cert-label">Section 63 BSA SHA-256 Digital Seal:</span>
-                <button class="btn-copy-hash" onclick="copyHash()">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                  </svg>
-                  <span>Copy</span>
-                </button>
-              </div>
-              <div class="hash-string" id="hashDisplay">Pending analysis...</div>
-
-              <div class="cert-actions">
-                <a id="btnDownloadShot" href="#" download="evidence-screenshot.png" class="btn-cert-action">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="7 10 12 15 17 10"></polyline>
-                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                  </svg>
-                  <span>Save Screenshot</span>
-                </a>
-                <button class="btn-cert-action" onclick="downloadCertificate()">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                  </svg>
-                  <span>Export BSA Cert</span>
-                </button>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
       </div>
 
-      <!-- TAB 2: Device Evidence Detailed View -->
-      <div class="tab-panel" id="tab-device">
-        <div class="panel-card">
-          <div class="panel-title-bar">
-            <div class="panel-headline">
+      <!-- Core Evidence 2-Column Grid -->
+      <div class="results-grid">
+        
+        <!-- Left: Diagnostic Threat Signals -->
+        <div class="results-card">
+          <div class="card-title-bar">
+            <h3>
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                <polyline points="2 17 12 22 22 17"></polyline>
+                <polyline points="2 12 12 17 22 12"></polyline>
+              </svg>
+              <span>Forensic Risk Indicators</span>
+            </h3>
+            <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-dim);" id="execLatencyTag">--ms Latency</span>
+          </div>
+
+          <ul class="reasons-container" id="reasonsContainer">
+            <!-- Rendered dynamically -->
+          </ul>
+
+          <div class="telemetry-quad">
+            <div class="quad-cell">
+              <div class="quad-label">Impersonated Entity</div>
+              <div class="quad-val" id="quadBrand">--</div>
+            </div>
+            <div class="quad-cell">
+              <div class="quad-label">Domain Age</div>
+              <div class="quad-val" id="quadAge">--</div>
+            </div>
+            <div class="quad-cell">
+              <div class="quad-label">Redirect Hops</div>
+              <div class="quad-val" id="quadHops">--</div>
+            </div>
+            <div class="quad-cell">
+              <div class="quad-label">Harvested Inputs</div>
+              <div class="quad-val" id="quadFields">--</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: 3D Interactive Device Frame -->
+        <div class="results-card">
+          <div class="card-title-bar">
+            <h3>
               <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
                 <line x1="12" y1="18" x2="12.01" y2="18"></line>
               </svg>
-              <span>Forensic Device Artifact (High Resolution View)</span>
-            </div>
-            <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--cyan);">Device: Android Pixel 7 Emulation</span>
-          </div>
-          <div style="text-align: center; padding: 1.5rem 0;">
-            <img id="detailScreenshot" src="" alt="High Resolution Forensic Capture" style="max-width: 100%; max-height: 600px; border-radius: var(--radius-md); border: 1px solid var(--border); box-shadow: var(--shadow-ambient);">
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB 3: Hop Chain Visualizer -->
-      <div class="tab-panel" id="tab-hops">
-        <div class="panel-card">
-          <div class="panel-title-bar">
-            <div class="panel-headline">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="18" cy="5" r="3"></circle>
-                <circle cx="6" cy="12" r="3"></circle>
-                <circle cx="18" cy="19" r="3"></circle>
-                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+              <span>Captured Mobile Sandbox Evidence</span>
+            </h3>
+            <button class="btn-hash-copy" onclick="openLightboxModal()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
               </svg>
-              <span>Network Redirection Route Visualizer</span>
-            </div>
-            <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-dim);" id="hopCountBadge">0 Hops</span>
-          </div>
-
-          <div class="hop-timeline" id="hopTimeline">
-            <!-- Rendered dynamically -->
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB 4: Section 63 BSA JSON Dossier -->
-      <div class="tab-panel" id="tab-dossier">
-        <div class="terminal-box">
-          <div class="terminal-bar">
-            <span class="terminal-title">FORENSIC_DOSSIER_SEC63_BSA.JSON</span>
-            <button class="btn-copy-hash" onclick="copyJsonDossier()">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-              </svg>
-              <span>Copy Full JSON</span>
+              <span>Inspect Fullscreen</span>
             </button>
           </div>
-          <pre class="terminal-content" id="dossierContent">{ "status": "No scan executed" }</pre>
+
+          <div class="device-stage">
+            <div class="device-mockup" id="deviceMockup" onclick="openLightboxModal()">
+              <div class="device-glare"></div>
+              <div class="device-notch"></div>
+              <img id="shotElement" src="" alt="Forensic Screenshot Proof">
+            </div>
+          </div>
+
+          <!-- Section 63 BSA Cryptographic Certificate Seal -->
+          <div class="bsa-hash-box">
+            <div class="bsa-hash-top">
+              <span class="bsa-hash-title">Section 63 BSA SHA-256 Digital Seal:</span>
+              <button class="btn-hash-copy" onclick="copyBsaHashSeal()">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span>Copy</span>
+              </button>
+            </div>
+            <div class="bsa-sha-string" id="shaCodeString">Pending analysis...</div>
+
+            <div class="cert-actions-row">
+              <a id="btnDownloadEvidencePng" href="#" download="forensic-screenshot.png" class="btn-cert-download">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span>Save PNG</span>
+              </a>
+              <button class="btn-cert-download" onclick="exportBsaCertJson()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+                <span>Export BSA Cert</span>
+              </button>
+            </div>
+          </div>
+
         </div>
+
       </div>
 
-    </div>
+      <!-- Raw Technical JSON Terminal -->
+      <div class="terminal-drawer">
+        <div class="terminal-bar">
+          <span>FORENSIC_DOSSIER_SEC63_BSA.JSON</span>
+          <button class="btn-hash-copy" onclick="copyFullJsonDossier()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <span>Copy Full JSON</span>
+          </button>
+        </div>
+        <pre class="terminal-raw" id="terminalRawView">{ "status": "Ready for detonation" }</pre>
+      </div>
 
-    <!-- Lightbox Modal for Screenshot Inspection -->
-    <div class="inspector-modal" id="inspectorModal" onclick="closeInspector()">
-      <div class="modal-viewport" onclick="event.stopPropagation()">
-        <button class="modal-close-btn" onclick="closeInspector()">&times;</button>
-        <img id="inspectorImg" src="" alt="Fullscreen Forensic Screenshot">
+    </section>
+
+    <!-- Lightbox Modal -->
+    <div class="lightbox-modal" id="lightboxModal" onclick="closeLightboxModal()">
+      <div class="lightbox-frame" onclick="event.stopPropagation()">
+        <button class="lightbox-close-btn" onclick="closeLightboxModal()">&times;</button>
+        <img id="lightboxImgEl" src="" alt="Fullscreen Evidence Screenshot">
       </div>
     </div>
 
     <!-- Ephemeral Toast -->
     <div class="toast-pill" id="toastPill">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="20 6 9 17 4 12"></polyline>
       </svg>
-      <span id="toastMessage">Copied to clipboard</span>
+      <span id="toastText">Copied to clipboard</span>
     </div>
 
     <!-- Footer -->
     <footer>
-      <p>ScamTrace Forensic Engine &bull; Compliant with Section 63 of Bharatiya Sakshya Adhiniyam, 2023 &bull; Open Source Fraud Triage</p>
+      <p>ScamTrace Forensic Engine &bull; Section 63 Bharatiya Sakshya Adhiniyam, 2023 &bull; Open-Source First-Hour Fraud Intervention</p>
     </footer>
 
   </div>
 
   <script>
     // State Store
-    let currentDossier = null;
-    let audioEnabled = true;
+    let activeDossier = null;
+    let audioMuted = false;
     let audioCtx = null;
-    let timerInterval = null;
 
     // Elements
-    const targetUrl = document.getElementById('targetUrl');
-    const clearBtn = document.getElementById('clearBtn');
+    const targetLinkInput = document.getElementById('targetLinkInput');
     const btnDetonate = document.getElementById('btnDetonate');
-    const detonateBtnText = document.getElementById('detonateBtnText');
-    const soundToggle = document.getElementById('soundToggle');
-    const soundLabel = document.getElementById('soundLabel');
-    const hudStatus = document.getElementById('hudStatus');
-    const telemetryDeck = document.getElementById('telemetryDeck');
-    const telemetryTimer = document.getElementById('telemetryTimer');
-    const resultsDeck = document.getElementById('resultsDeck');
-    const verdictBanner = document.getElementById('verdictBanner');
-    const verdictHeadline = document.getElementById('verdictHeadline');
-    const verdictSummary = document.getElementById('verdictSummary');
-    const gaugeScore = document.getElementById('gaugeScore');
-    const gaugeFill = document.getElementById('gaugeFill');
-    const emergencyDesk = document.getElementById('emergencyDesk');
-    const emergencyTitle = document.getElementById('emergencyTitle');
-    const emergencyText = document.getElementById('emergencyText');
+    const btnDetonateLabel = document.getElementById('btnDetonateLabel');
+    const btnAudioToggle = document.getElementById('btnAudioToggle');
+    const audioStatusText = document.getElementById('audioStatusText');
+    const liveStatusText = document.getElementById('liveStatusText');
+    
+    // Story Scroll Elements
+    const storyZone = document.getElementById('storyZone');
+    const schematicArtboard = document.getElementById('schematicArtboard');
+    const poweredWire = document.getElementById('poweredWire');
+    const scrubFillBar = document.getElementById('scrubFillBar');
+    const timelinePercent = document.getElementById('timelinePercent');
+    const stageCheckpointLabel = document.getElementById('stageCheckpointLabel');
+    
+    // Results Elements
+    const resultsDeckZone = document.getElementById('resultsDeckZone');
+    const verdictBannerBox = document.getElementById('verdictBannerBox');
+    const verdictHeading = document.getElementById('verdictHeading');
+    const verdictDetail = document.getElementById('verdictDetail');
+    const emergencyConsole = document.getElementById('emergencyConsole');
+    const emergencyTitleLabel = document.getElementById('emergencyTitleLabel');
+    const emergencyProse = document.getElementById('emergencyProse');
     const btnLangEn = document.getElementById('btnLangEn');
     const btnLangHi = document.getElementById('btnLangHi');
-    const reasonsFeed = document.getElementById('reasonsFeed');
-    const valBrand = document.getElementById('valBrand');
-    const valAge = document.getElementById('valAge');
-    const valHops = document.getElementById('valHops');
-    const valFields = document.getElementById('valFields');
-    const analysisLatency = document.getElementById('analysisLatency');
-    const deviceScreenshot = document.getElementById('deviceScreenshot');
-    const detailScreenshot = document.getElementById('detailScreenshot');
-    const hashDisplay = document.getElementById('hashDisplay');
-    const btnDownloadShot = document.getElementById('btnDownloadShot');
-    const hopCountBadge = document.getElementById('hopCountBadge');
-    const hopTimeline = document.getElementById('hopTimeline');
-    const dossierContent = document.getElementById('dossierContent');
-    const inspectorModal = document.getElementById('inspectorModal');
-    const inspectorImg = document.getElementById('inspectorImg');
+    const reasonsContainer = document.getElementById('reasonsContainer');
+    const quadBrand = document.getElementById('quadBrand');
+    const quadAge = document.getElementById('quadAge');
+    const quadHops = document.getElementById('quadHops');
+    const quadFields = document.getElementById('quadFields');
+    const execLatencyTag = document.getElementById('execLatencyTag');
+    const shotElement = document.getElementById('shotElement');
+    const shaCodeString = document.getElementById('shaCodeString');
+    const btnDownloadEvidencePng = document.getElementById('btnDownloadEvidencePng');
+    const terminalRawView = document.getElementById('terminalRawView');
+    const lightboxModal = document.getElementById('lightboxModal');
+    const lightboxImgEl = document.getElementById('lightboxImgEl');
     const toastPill = document.getElementById('toastPill');
-    const toastMessage = document.getElementById('toastMessage');
-    const deviceChassis = document.getElementById('deviceChassis');
+    const toastText = document.getElementById('toastText');
+    const deviceMockup = document.getElementById('deviceMockup');
 
-    // Web Audio Synthesizer (Zero Dependencies)
-    function playCyberTone(type) {
-      if (!audioEnabled) return;
+    // Rolling Clock Animation Elements
+    const drumMin1 = document.getElementById('drum-min-1');
+    const drumMin2 = document.getElementById('drum-min-2');
+    const drumSec1 = document.getElementById('drum-sec-1');
+    const drumSec2 = document.getElementById('drum-sec-2');
+    const scoreDrum1 = document.getElementById('score-drum-1');
+    const scoreDrum2 = document.getElementById('score-drum-2');
+
+    // Synthesized Web Audio
+    function playClick() {
+      if (audioMuted) return;
       try {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         if (audioCtx.state === 'suspended') audioCtx.resume();
-
         const t = audioCtx.currentTime;
         const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-
-        if (type === 'click') {
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(800, t);
-          osc.frequency.exponentialRampToValueAtTime(300, t + 0.04);
-          gain.gain.setValueAtTime(0.08, t);
-          gain.gain.linearRampToValueAtTime(0, t + 0.04);
-          osc.start(t);
-          osc.stop(t + 0.04);
-        } else if (type === 'scan-step') {
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(1200, t);
-          osc.frequency.exponentialRampToValueAtTime(1600, t + 0.06);
-          gain.gain.setValueAtTime(0.04, t);
-          gain.gain.linearRampToValueAtTime(0, t + 0.06);
-          osc.start(t);
-          osc.stop(t + 0.06);
-        } else if (type === 'threat-alert') {
-          osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(440, t);
-          osc.frequency.setValueAtTime(330, t + 0.1);
-          osc.frequency.setValueAtTime(220, t + 0.2);
-          gain.gain.setValueAtTime(0.12, t);
-          gain.gain.linearRampToValueAtTime(0, t + 0.35);
-          osc.start(t);
-          osc.stop(t + 0.35);
-        } else if (type === 'safe-chime') {
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(523.25, t); // C5
-          osc.frequency.setValueAtTime(659.25, t + 0.1); // E5
-          osc.frequency.setValueAtTime(783.99, t + 0.2); // G5
-          gain.gain.setValueAtTime(0.09, t);
-          gain.gain.linearRampToValueAtTime(0, t + 0.4);
-          osc.start(t);
-          osc.stop(t + 0.4);
-        }
-      } catch (e) {
-        // AudioContext restricted or unsupported
-      }
+        const g = audioCtx.createGain();
+        osc.connect(g);
+        g.connect(audioCtx.destination);
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(650, t);
+        osc.frequency.exponentialRampToValueAtTime(200, t + 0.04);
+        g.gain.setValueAtTime(0.06, t);
+        g.gain.linearRampToValueAtTime(0, t + 0.04);
+        osc.start(t);
+        osc.stop(t + 0.04);
+      } catch (e) {}
     }
 
-    // Audio FX Toggle
-    soundToggle.addEventListener('click', () => {
-      audioEnabled = !audioEnabled;
-      if (audioEnabled) {
-        soundToggle.classList.add('active');
-        soundLabel.textContent = 'AUDIO: ON';
-        playCyberTone('click');
+    function playAlertChime() {
+      if (audioMuted) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const t = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        osc.connect(g);
+        g.connect(audioCtx.destination);
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(440, t);
+        osc.frequency.setValueAtTime(330, t + 0.12);
+        g.gain.setValueAtTime(0.09, t);
+        g.gain.linearRampToValueAtTime(0, t + 0.3);
+        osc.start(t);
+        osc.stop(t + 0.3);
+      } catch (e) {}
+    }
+
+    // Audio Toggle
+    btnAudioToggle.addEventListener('click', () => {
+      audioMuted = !audioMuted;
+      if (!audioMuted) {
+        btnAudioToggle.classList.add('active');
+        audioStatusText.textContent = 'AUDIO: ON';
+        playClick();
       } else {
-        soundToggle.classList.remove('active');
-        soundLabel.textContent = 'AUDIO: OFF';
+        btnAudioToggle.classList.remove('active');
+        audioStatusText.textContent = 'AUDIO: OFF';
       }
     });
 
-    // Input Input-Event Handlers
-    targetUrl.addEventListener('input', () => {
-      clearBtn.style.display = targetUrl.value.length > 0 ? 'block' : 'none';
-    });
+    // Clock Drum Roller Engine (T-Minus 60 Minutes Countdown)
+    let totalSecondsRemaining = 3599; // 59m 59s
+    function updateCountdownClock() {
+      const mins = Math.floor(totalSecondsRemaining / 60);
+      const secs = totalSecondsRemaining % 60;
 
-    clearBtn.addEventListener('click', () => {
-      targetUrl.value = '';
-      clearBtn.style.display = 'none';
-      targetUrl.focus();
-      playCyberTone('click');
-    });
+      const m1 = Math.floor(mins / 10);
+      const m2 = mins % 10;
+      const s1 = Math.floor(secs / 10);
+      const s2 = secs % 10;
 
-    // Preset loader
-    function loadPreset(type) {
-      playCyberTone('click');
-      if (type === 'mock-upi') {
-        targetUrl.value = 'http://power-bill-payment.xyz/verify-refund.php';
+      drumMin1.style.transform = `translateY(-${m1 * 38}px)`;
+      drumMin2.style.transform = `translateY(-${m2 * 38}px)`;
+      drumSec1.style.transform = `translateY(-${s1 * 38}px)`;
+      drumSec2.style.transform = `translateY(-${s2 * 38}px)`;
+
+      if (totalSecondsRemaining > 0) totalSecondsRemaining--;
+    }
+    setInterval(updateCountdownClock, 1000);
+    updateCountdownClock();
+
+    // Rolling Threat Score Setter
+    function setRollingScore(targetScore) {
+      const tens = Math.floor(targetScore / 10);
+      const ones = targetScore % 10;
+      scoreDrum1.style.transform = `translateY(-${tens * 52}px)`;
+      scoreDrum2.style.transform = `translateY(-${ones * 52}px)`;
+    }
+
+    // Demo Shortcuts
+    function loadShortcut(type) {
+      playClick();
+      if (type === 'electricity') {
+        targetLinkInput.value = 'http://power-bill-payment.xyz/verify-refund.php';
       } else if (type === 'sbi') {
-        targetUrl.value = 'https://sbi.co.in';
+        targetLinkInput.value = 'https://sbi.co.in';
       } else if (type === 'bescom') {
-        targetUrl.value = 'https://bescom.karnataka.gov.in';
+        targetLinkInput.value = 'https://bescom.karnataka.gov.in';
       }
-      clearBtn.style.display = 'block';
-      targetUrl.focus();
+      targetLinkInput.focus();
     }
 
-    // Tabs Switcher
-    function setTab(tabId) {
-      playCyberTone('click');
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+    // ==============================================================
+    // STICKY HORIZONTAL SCROLL CIRCUIT DRIVER
+    // ==============================================================
+    const storyStations = [
+      { id: 1, pos: 300, pct: 0.08 },
+      { id: 2, pos: 900, pct: 0.25 },
+      { id: 3, pos: 1500, pct: 0.45 },
+      { id: 4, pos: 2100, pct: 0.65 },
+      { id: 5, pos: 2700, pct: 0.82 },
+      { id: 6, pos: 3300, pct: 0.98 }
+    ];
 
-      event.currentTarget.classList.add('active');
-      const targetPanel = document.getElementById('tab-' + tabId);
-      if (targetPanel) targetPanel.classList.add('active');
+    let lastActiveStory = 1;
+
+    function handleStoryScroll() {
+      const rect = storyZone.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      const scrollableDist = rect.height - windowHeight;
+
+      if (scrollableDist <= 0) return;
+
+      const progress = Math.min(1, Math.max(0, -rect.top / scrollableDist));
+      
+      const percentVal = Math.round(progress * 100);
+      timelinePercent.textContent = `CURRENT: ${percentVal}%`;
+      scrubFillBar.style.width = `${percentVal}%`;
+
+      // 1. Horizontal Artboard Translation
+      const artboardWidth = 3600;
+      const maxTranslate = artboardWidth - window.innerWidth;
+      const currentTranslate = progress * maxTranslate;
+      schematicArtboard.style.transform = `translate3d(-${currentTranslate}px, 0, 0)`;
+
+      // 2. Animate Powered Wire SVG
+      const totalPathLength = 3500;
+      const offset = (1 - progress) * totalPathLength;
+      poweredWire.style.strokeDashoffset = offset;
+
+      // 3. Highlight stations based on progress
+      let currentActive = 1;
+      storyStations.forEach(s => {
+        const unit = document.getElementById(`story-unit-${s.id}`);
+        const node = document.getElementById(`circ-node-${s.id}`);
+        const ring = document.getElementById(`circ-ring-${s.id}`);
+
+        if (progress >= s.pct) {
+          currentActive = s.id;
+          unit.classList.remove('active');
+          unit.classList.add('complete');
+          unit.querySelector('.card-status-badge').textContent = 'EXPOSED';
+          if (node) node.setAttribute('fill', '#00d68f');
+          if (ring) ring.setAttribute('stroke', 'rgba(0, 214, 143, 0.4)');
+        } else if (progress >= (s.pct - 0.12)) {
+          currentActive = s.id;
+          unit.classList.add('active');
+          unit.classList.remove('complete');
+          unit.querySelector('.card-status-badge').textContent = 'IN TRANSIT';
+          if (node) node.setAttribute('fill', '#fd9c36');
+          if (ring) ring.setAttribute('stroke', 'rgba(253, 156, 54, 0.4)');
+        } else {
+          unit.classList.remove('active');
+          unit.classList.remove('complete');
+          unit.querySelector('.card-status-badge').textContent = 'AHEAD';
+          if (node) node.setAttribute('fill', '#38342c');
+          if (ring) ring.setAttribute('stroke', 'rgba(255, 255, 255, 0.08)');
+        }
+      });
+
+      if (currentActive !== lastActiveStory) {
+        lastActiveStory = currentActive;
+        stageCheckpointLabel.innerHTML = `PHASE <strong>0${currentActive}</strong> / 06`;
+        playClick();
+      }
     }
 
-    // 3D Mouse Parallax & Specular Glare on Device Chassis
+    window.addEventListener('scroll', handleStoryScroll, { passive: true });
+    window.addEventListener('resize', handleStoryScroll);
+
+    // 3D Mouse Parallax & Specular Glare on Device Mockup
     if (window.matchMedia('(hover: hover)').matches) {
-      deviceChassis.addEventListener('mousemove', (e) => {
-        const rect = deviceChassis.getBoundingClientRect();
+      deviceMockup.addEventListener('mousemove', (e) => {
+        const rect = deviceMockup.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
         const centerX = rect.width / 2;
@@ -1884,64 +2141,61 @@
         const rotateX = ((y - centerY) / centerY) * -10;
         const rotateY = ((x - centerX) / centerX) * 10;
 
-        deviceChassis.style.transform = `rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale(1.02)`;
-        deviceChassis.style.setProperty('--glare-x', `${(x / rect.width * 100).toFixed(1)}%`);
-        deviceChassis.style.setProperty('--glare-y', `${(y / rect.height * 100).toFixed(1)}%`);
+        deviceMockup.style.transform = `rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale(1.02)`;
+        deviceMockup.style.setProperty('--glare-x', `${(x / rect.width * 100).toFixed(1)}%`);
+        deviceMockup.style.setProperty('--glare-y', `${(y / rect.height * 100).toFixed(1)}%`);
       });
 
-      deviceChassis.addEventListener('mouseleave', () => {
-        deviceChassis.style.transform = 'rotateX(4deg) rotateY(-3deg)';
-        deviceChassis.style.setProperty('--glare-x', '50%');
-        deviceChassis.style.setProperty('--glare-y', '50%');
+      deviceMockup.addEventListener('mouseleave', () => {
+        deviceMockup.style.transform = 'rotateX(4deg) rotateY(-3deg)';
+        deviceMockup.style.setProperty('--glare-x', '50%');
+        deviceMockup.style.setProperty('--glare-y', '50%');
       });
     }
 
-    // Toast Notification Utility
-    let toastTimeout = null;
-    function showToast(msg) {
-      toastMessage.textContent = msg;
+    // Toast utility
+    let toastTimer = null;
+    function showToastMsg(text) {
+      toastText.textContent = text;
       toastPill.classList.add('visible');
-      if (toastTimeout) clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(() => {
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
         toastPill.classList.remove('visible');
       }, 3000);
     }
 
-    // Copy Hash
-    function copyHash() {
-      const hash = hashDisplay.textContent.trim();
-      if (!hash || hash === 'Pending analysis...') return;
-      navigator.clipboard.writeText(hash).then(() => {
-        playCyberTone('click');
-        showToast('Section 63 BSA SHA-256 copied');
+    function copyBsaHashSeal() {
+      const code = shaCodeString.textContent.trim();
+      if (!code || code === 'Pending analysis...') return;
+      navigator.clipboard.writeText(code).then(() => {
+        playClick();
+        showToastMsg('Section 63 BSA SHA-256 seal copied');
       });
     }
 
-    // Copy JSON Dossier
-    function copyJsonDossier() {
-      if (!currentDossier) return;
-      navigator.clipboard.writeText(JSON.stringify(currentDossier, null, 2)).then(() => {
-        playCyberTone('click');
-        showToast('Forensic JSON Dossier copied');
+    function copyFullJsonDossier() {
+      if (!activeDossier) return;
+      navigator.clipboard.writeText(JSON.stringify(activeDossier, null, 2)).then(() => {
+        playClick();
+        showToastMsg('Full JSON dossier copied');
       });
     }
 
-    // Copy Bank Lien Notice Draft
-    function copyFreezeNotice() {
-      if (!currentDossier) return;
-      const url = currentDossier.url || '';
-      const brand = currentDossier.vision?.impersonated_brand || 'Banking/Utility Portal';
-      const hash = currentDossier.capture?.shotSha || 'N/A';
-      const timestamp = new Date().toISOString();
+    function copyFreezeDraftNotice() {
+      if (!activeDossier) return;
+      const url = activeDossier.url || '';
+      const brand = activeDossier.vision?.impersonated_brand || 'Banking/Utility Entity';
+      const hash = activeDossier.capture?.shotSha || 'N/A';
+      const date = new Date().toISOString();
 
-      const text = `URGENT: DISPUTE & BENEFICIARY FUND LIEN REQUEST (UNDER RBI FRAUD MANAGEMENT GUIDELINES)
-Date: ${timestamp}
+      const notice = `URGENT: DISPUTE & BENEFICIARY FUND LIEN REQUEST (UNDER RBI FRAUD MANAGEMENT GUIDELINES)
+Date: ${date}
 To: Nodal Fraud & Operations Officer
 
 I am reporting an unauthorized fraudulent transaction / social engineering attempt initiated via a phishing domain masquerading as "${brand}".
 
 EVIDENCE IDENTIFIERS:
-- Source / Referral URL: ${url}
+- Referral URL: ${url}
 - Section 63 BSA SHA-256 Screenshot Seal: ${hash}
 - Forensic Triage Verdict: High-Risk Deceptive Infrastructure
 
@@ -1950,50 +2204,48 @@ In accordance with Reserve Bank of India Circular on Customer Protection - Limit
 1. Immediate lien mark and freeze on the beneficiary account where funds were diverted.
 2. Immediate transmission of the suspect beneficiary details to the National Cybercrime Reporting Portal (1930 / I4C).
 
-Complainant Signature / Timestamp: ${timestamp}`;
+Complainant Timestamp: ${date}`;
 
-      navigator.clipboard.writeText(text).then(() => {
-        playCyberTone('click');
-        showToast('Bank Freeze & Lien Notice Draft copied');
+      navigator.clipboard.writeText(notice).then(() => {
+        playClick();
+        showToastMsg('Bank Freeze & Lien Notice Draft copied');
       });
     }
 
-    // Language Toggle for Emergency Guidance
-    function switchLang(lang) {
-      playCyberTone('click');
+    function switchAdvisoryLang(lang) {
+      playClick();
       if (lang === 'hi') {
         btnLangHi.classList.add('active');
         btnLangEn.classList.remove('active');
-        emergencyTitle.textContent = 'तत्काल पीड़ित सलाह (गोल्डन 60 मिनट)';
-        emergencyText.innerHTML = '<strong>आगे कोई पैसे न भेजें या UPI PIN दर्ज न करें।</strong> यदि राशि कट चुकी है, तो तुरंत अपने बैंक के हेल्पलाइन नंबर पर कॉल करके लाभार्थी खाते पर रोक (Lien/Freeze) लगवाएं और साइबर हेल्पलाइन <strong>1930</strong> पर शिकायत दर्ज करें।';
+        emergencyTitleLabel.textContent = 'तत्काल पीड़ित सलाह (गोल्डन 60 मिनट)';
+        emergencyProse.innerHTML = '<strong>आगे कोई पैसे न भेजें या UPI PIN दर्ज न करें।</strong> यदि राशि कट चुकी है, तो तुरंत अपने बैंक के हेल्पलाइन नंबर पर कॉल करके लाभार्थी खाते पर रोक (Lien/Freeze) लगवाएं और साइबर हेल्पलाइन <strong>1930</strong> पर शिकायत दर्ज करें।';
       } else {
         btnLangEn.classList.add('active');
         btnLangHi.classList.remove('active');
-        emergencyTitle.textContent = 'Victim Emergency Protocol (Golden 60 Minutes)';
-        emergencyText.innerHTML = '<strong>Do not authorize transactions or enter UPI PINs.</strong> If funds were already transferred, immediately demand an account lien/freeze with your bank\'s fraud nodal officer and report to the National Cybercrime Portal within 60 minutes to prevent cash withdrawal by the mule ring.';
+        emergencyTitleLabel.textContent = 'Victim Emergency Protocol (Golden 60 Minutes)';
+        emergencyProse.innerHTML = '<strong>Do not authorize transactions or enter your UPI PIN.</strong> If funds were already transferred, immediately demand an account lien/freeze with your bank\'s fraud nodal officer and report to the National Cybercrime Portal within 60 minutes to prevent cash withdrawal by the mule ring.';
       }
     }
 
-    // Export BSA Certificate
-    function downloadCertificate() {
-      if (!currentDossier) return;
-      playCyberTone('click');
+    function exportBsaCertJson() {
+      if (!activeDossier) return;
+      playClick();
       const cert = {
         title: "CERTIFICATE OF ELECTRONIC EVIDENCE UNDER SECTION 63 OF BHARATIYA SAKSHYA ADHINIYAM, 2023",
         generatedAt: new Date().toISOString(),
-        verifiedURL: currentDossier.url,
-        finalLandingURL: currentDossier.capture?.finalUrl,
+        verifiedURL: activeDossier.url,
+        finalLandingURL: activeDossier.capture?.finalUrl,
         cryptographicFingerprint: {
           algorithm: "SHA-256",
-          screenshotHash: currentDossier.capture?.shotSha,
-          domTreeHash: currentDossier.capture?.domSha
+          screenshotHash: activeDossier.capture?.shotSha,
+          domTreeHash: activeDossier.capture?.domSha
         },
         forensicAnalysis: {
-          riskScore: currentDossier.risk?.score,
-          riskLevel: currentDossier.risk?.level,
-          reasons: currentDossier.risk?.reasons,
-          impersonation: currentDossier.vision?.impersonated_brand,
-          domainAgeDays: currentDossier.domain?.ageInDays
+          riskScore: activeDossier.risk?.score,
+          riskLevel: activeDossier.risk?.level,
+          reasons: activeDossier.risk?.reasons,
+          impersonation: activeDossier.vision?.impersonated_brand,
+          domainAgeDays: activeDossier.domain?.ageInDays
         },
         certifyingEngine: "ScamTrace Automated Forensic Sandbox Engine v1.0"
       };
@@ -2005,70 +2257,54 @@ Complainant Signature / Timestamp: ${timestamp}`;
       a.download = `ScamTrace-Sec63-BSA-${Date.now()}.json`;
       a.click();
       URL.revokeObjectURL(url);
-      showToast('Section 63 Certificate exported');
+      showToastMsg('Section 63 Certificate exported');
     }
 
-    // Modal Lightbox
-    function openInspector() {
-      if (!deviceScreenshot.src) return;
-      playCyberTone('click');
-      inspectorImg.src = deviceScreenshot.src;
-      inspectorModal.classList.add('open');
+    function openLightboxModal() {
+      if (!shotElement.src) return;
+      playClick();
+      lightboxImgEl.src = shotElement.src;
+      lightboxModal.classList.add('open');
     }
-    function closeInspector() {
-      inspectorModal.classList.remove('open');
+    function closeLightboxModal() {
+      lightboxModal.classList.remove('open');
     }
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeInspector();
+      if (e.key === 'Escape') closeLightboxModal();
     });
 
-    // Detonation Action
-    btnDetonate.addEventListener('click', executeDetonation);
-    targetUrl.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') executeDetonation();
+    // ==============================================================
+    // DETONATION & RESULTS PRESENTATION
+    // ==============================================================
+    btnDetonate.addEventListener('click', runDetonation);
+    targetLinkInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') runDetonation();
     });
 
-    async function executeDetonation() {
-      const url = targetUrl.value.trim();
+    async function runDetonation() {
+      const url = targetLinkInput.value.trim();
       if (!url) {
-        showToast('Please enter a link to investigate');
-        targetUrl.focus();
+        showToastMsg('Please paste a suspect URL');
+        targetLinkInput.focus();
         return;
       }
 
-      playCyberTone('click');
-
-      // Update UI: Detonating state
+      playClick();
       btnDetonate.disabled = true;
-      detonateBtnText.textContent = 'Detonating…';
-      hudStatus.textContent = 'DETONATING';
-      telemetryDeck.style.display = 'block';
-      resultsDeck.style.display = 'none';
+      btnDetonateLabel.textContent = 'Detonating…';
+      liveStatusText.textContent = 'DETONATION ACTIVE';
 
-      // Reset Telemetry steps
-      const steps = ['t-ssrf', 't-sandbox', 't-vision', 't-domain', 't-score'];
-      steps.forEach(id => {
-        const el = document.getElementById(id);
-        el.className = 't-step';
-      });
-      document.getElementById('t-ssrf').classList.add('active');
+      // Auto-scroll through the story zone
+      storyZone.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-      const startTime = Date.now();
-      timerInterval = setInterval(() => {
-        telemetryTimer.textContent = ((Date.now() - startTime) / 1000).toFixed(2) + 's';
-      }, 50);
-
-      // Sim step telemetry progress & audio
-      let currentStepIdx = 0;
-      const stepTimer = setInterval(() => {
-        if (currentStepIdx < steps.length - 1) {
-          document.getElementById(steps[currentStepIdx]).classList.remove('active');
-          document.getElementById(steps[currentStepIdx]).classList.add('done');
-          currentStepIdx++;
-          document.getElementById(steps[currentStepIdx]).classList.add('active');
-          playCyberTone('scan-step');
+      let currentScrollProgress = 0;
+      const progressTimer = setInterval(() => {
+        if (currentScrollProgress < 0.9) {
+          currentScrollProgress += 0.08;
+          const targetY = storyZone.offsetTop + (currentScrollProgress * (storyZone.offsetHeight - window.innerHeight));
+          window.scrollTo({ top: targetY, behavior: 'smooth' });
         }
-      }, 500);
+      }, 300);
 
       try {
         const res = await fetch('/api/investigate', {
@@ -2078,65 +2314,63 @@ Complainant Signature / Timestamp: ${timestamp}`;
         });
 
         const data = await res.json();
-        clearInterval(stepTimer);
-        clearInterval(timerInterval);
+        clearInterval(progressTimer);
 
         if (data.error) {
           alert('Detonation Aborted: ' + data.error);
           return;
         }
 
-        currentDossier = data;
-        renderDossier(data);
+        activeDossier = data;
 
-        if (data.risk?.level === 'CRITICAL') {
-          playCyberTone('threat-alert');
-        } else if (data.risk?.level === 'LOW') {
-          playCyberTone('safe-chime');
-        } else {
-          playCyberTone('threat-alert');
-        }
+        // Finish scrolling
+        window.scrollTo({
+          top: storyZone.offsetTop + storyZone.offsetHeight - window.innerHeight,
+          behavior: 'smooth'
+        });
+
+        setTimeout(() => {
+          renderDossierView(data);
+          resultsDeckZone.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 700);
+
+        playAlertChime();
 
       } catch (err) {
-        clearInterval(stepTimer);
-        clearInterval(timerInterval);
+        clearInterval(progressTimer);
         alert('Network or Server Error: ' + err.message);
       } finally {
         btnDetonate.disabled = false;
-        detonateBtnText.textContent = 'Detonate Link';
-        hudStatus.textContent = 'ANALYSIS COMPLETE';
-        telemetryDeck.style.display = 'none';
+        btnDetonateLabel.textContent = 'Detonate & Triage';
+        liveStatusText.textContent = 'SANDBOX ARMED';
       }
     }
 
-    // Render Completed Dossier
-    function renderDossier(d) {
-      resultsDeck.style.display = 'block';
+    function renderDossierView(d) {
+      resultsDeckZone.style.display = 'block';
 
-      // 1. Verdict Level & Gauge
-      const level = d.risk?.level || 'LOW';
+      // 1. Verdict & Rolling Threat Score
+      const lvl = d.risk?.level || 'LOW';
       const score = typeof d.risk?.score === 'number' ? d.risk.score : 0;
-      verdictBanner.className = 'verdict-banner ' + level;
-      verdictHeadline.textContent = `${level}: ${score}/100`;
+      verdictBannerBox.className = 'verdict-banner-box ' + lvl;
+      verdictHeading.textContent = `${lvl}: ${score}/100`;
 
-      // Gauge SVG offset: max 377
-      const offset = 377 - (377 * (score / 100));
-      gaugeFill.style.strokeDashoffset = offset;
-      gaugeScore.textContent = score;
+      // Set rolling mechanical digits for threat score
+      setRollingScore(score);
 
-      if (level === 'CRITICAL') {
-        verdictSummary.textContent = 'High-conviction fraudulent site detected. Actively configured to harvest banking credentials, OTPs, and UPI authorizations.';
-        emergencyDesk.style.display = 'block';
-      } else if (level === 'SUSPICIOUS') {
-        verdictSummary.textContent = 'Elevated threat index. Multiple suspicious signals detected including deceptive brand usage or recent domain registration.';
-        emergencyDesk.style.display = 'block';
+      if (lvl === 'CRITICAL') {
+        verdictDetail.textContent = 'High-conviction phishing infrastructure detected. Actively configured to harvest UPI PIN and banking credentials.';
+        emergencyConsole.style.display = 'block';
+      } else if (lvl === 'SUSPICIOUS') {
+        verdictDetail.textContent = 'Elevated threat index. Multiple suspicious signals detected including deceptive brand usage or recent domain registration.';
+        emergencyConsole.style.display = 'block';
       } else {
-        verdictSummary.textContent = 'Legitimate, authenticated institutional website. Domain registration is established and no credential theft vectors were found.';
-        emergencyDesk.style.display = 'none';
+        verdictDetail.textContent = 'Legitimate, authenticated institutional website. Domain registration is established and no credential theft vectors were found.';
+        emergencyConsole.style.display = 'none';
       }
 
-      // 2. Risk Indicators Feed
-      reasonsFeed.innerHTML = '';
+      // 2. Reasons List
+      reasonsContainer.innerHTML = '';
       if (d.risk?.reasons && d.risk.reasons.length > 0) {
         d.risk.reasons.forEach(r => {
           const li = document.createElement('li');
@@ -2148,7 +2382,7 @@ Complainant Signature / Timestamp: ${timestamp}`;
             </svg>
             <span>${r}</span>
           `;
-          reasonsFeed.appendChild(li);
+          reasonsContainer.appendChild(li);
         });
       } else {
         const li = document.createElement('li');
@@ -2156,183 +2390,38 @@ Complainant Signature / Timestamp: ${timestamp}`;
           <svg style="stroke: var(--emerald);" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="20 6 9 17 4 12"></polyline>
           </svg>
-          <span>All forensic checks passed. Zero credential phishing vectors or deceptive urgency detected.</span>
+          <span>All security checks passed. Domain is authenticated with zero malicious form fields.</span>
         `;
-        reasonsFeed.appendChild(li);
+        reasonsContainer.appendChild(li);
       }
 
       // 3. Matrix Signals
-      valBrand.textContent = d.vision?.impersonated_brand || 'None Detected';
-      valAge.textContent = typeof d.domain?.ageInDays === 'number'
+      quadBrand.textContent = d.vision?.impersonated_brand || 'None Detected';
+      quadAge.textContent = typeof d.domain?.ageInDays === 'number'
         ? `${d.domain.ageInDays} Days (${(d.domain.ageInDays / 365).toFixed(1)} yrs)`
         : 'Unknown / Hidden';
       
       const hopCount = (d.capture?.hops || []).length;
-      valHops.textContent = `${hopCount} Redirection${hopCount === 1 ? '' : 's'}`;
+      quadHops.textContent = `${hopCount} Redirection${hopCount === 1 ? '' : 's'}`;
 
       const sensitiveNames = (d.capture?.fields || [])
         .filter(f => /pass|pin|otp|card|cvv|upi|bank/i.test(`${f.type} ${f.name} ${f.placeholder}`))
         .map(f => f.name || f.placeholder || f.type);
-      valFields.textContent = sensitiveNames.length > 0 ? sensitiveNames.slice(0, 3).join(', ') : 'None (Safe)';
+      quadFields.textContent = sensitiveNames.length > 0 ? sensitiveNames.slice(0, 3).join(', ') : 'None (Safe)';
 
-      analysisLatency.textContent = `${d.ms || 0}ms Latency`;
+      execLatencyTag.textContent = `${d.ms || 0}ms Latency`;
 
       // 4. Device Screenshot & BSA Hash
       if (d.capture?.shotPath) {
         const path = '/' + d.capture.shotPath;
-        deviceScreenshot.src = path;
-        detailScreenshot.src = path;
-        btnDownloadShot.href = path;
+        shotElement.src = path;
+        btnDownloadEvidencePng.href = path;
       }
-      hashDisplay.textContent = d.capture?.shotSha || 'N/A';
+      shaCodeString.textContent = d.capture?.shotSha || 'N/A';
 
-      // 5. Hop Timeline
-      hopCountBadge.textContent = `${hopCount} Hops Captured`;
-      hopTimeline.innerHTML = '';
-      if (d.capture?.hops && d.capture.hops.length > 0) {
-        d.capture.hops.forEach((h, idx) => {
-          const div = document.createElement('div');
-          div.className = 'hop-item';
-          div.innerHTML = `
-            <div class="hop-status-row">
-              <span class="hop-code">HOP #${idx + 1} &bull; HTTP ${h.status || 200}</span>
-              <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim);">${new URL(h.url).protocol.toUpperCase()}</span>
-            </div>
-            <div class="hop-url">${h.url}</div>
-          `;
-          hopTimeline.appendChild(div);
-        });
-      } else {
-        hopTimeline.innerHTML = `
-          <div class="hop-item">
-            <div class="hop-status-row">
-              <span class="hop-code">DIRECT HIT &bull; HTTP 200</span>
-            </div>
-            <div class="hop-url">${d.url}</div>
-          </div>
-        `;
-      }
-
-      // 6. JSON Dossier
-      dossierContent.textContent = JSON.stringify(d, null, 2);
-
-      // Smooth scroll to results
-      resultsDeck.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // 5. Raw JSON
+      terminalRawView.textContent = JSON.stringify(d, null, 2);
     }
-
-    // 3D Perspective Canvas Background (Smooth High-Performance Cyber Matrix)
-    const canvas = document.getElementById('ambientCanvas');
-    const ctx = canvas.getContext('2d');
-    let w, h;
-    let mouseX = 0, mouseY = 0;
-    let targetX = 0, targetY = 0;
-
-    function resizeCanvas() {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    window.addEventListener('mousemove', (e) => {
-      targetX = (e.clientX - w / 2) * 0.0005;
-      targetY = (e.clientY - h / 2) * 0.0005;
-    });
-
-    // Particle nodes in 3D perspective space
-    const NUM_NODES = 55;
-    const nodes = [];
-    for (let i = 0; i < NUM_NODES; i++) {
-      nodes.push({
-        x: (Math.random() - 0.5) * 1600,
-        y: (Math.random() - 0.5) * 1000,
-        z: Math.random() * 1000 + 100,
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: (Math.random() - 0.5) * 0.4,
-        size: Math.random() * 2 + 1
-      });
-    }
-
-    let sweepAngle = 0;
-    function render3DCanvas() {
-      ctx.clearRect(0, 0, w, h);
-
-      // Smooth camera dampening (lerp)
-      mouseX += (targetX - mouseX) * 0.05;
-      mouseY += (targetY - mouseY) * 0.05;
-
-      const fov = 450;
-      const cx = w / 2;
-      const cy = h * 0.4;
-
-      // Draw subtle horizon grid lines in 3D
-      ctx.save();
-      ctx.strokeStyle = 'rgba(0, 240, 255, 0.04)';
-      ctx.lineWidth = 1;
-
-      for (let z = 150; z < 1000; z += 120) {
-        const scale = fov / z;
-        const screenY = cy + 180 * scale + mouseY * 150;
-        ctx.beginPath();
-        ctx.moveTo(0, screenY);
-        ctx.lineTo(w, screenY);
-        ctx.stroke();
-      }
-
-      // Draw nodes and connective links
-      for (let i = 0; i < nodes.length; i++) {
-        const n = nodes[i];
-        n.x += n.vx;
-        n.y += n.vy;
-
-        // Wrap around bounds
-        if (n.x < -800) n.x = 800;
-        if (n.x > 800) n.x = -800;
-        if (n.y < -500) n.y = 500;
-        if (n.y > 500) n.y = -500;
-
-        const rotX = n.x * Math.cos(mouseX) - n.z * Math.sin(mouseX);
-        const rotZ = n.x * Math.sin(mouseX) + n.z * Math.cos(mouseX);
-
-        const scale = fov / Math.max(10, rotZ + 400);
-        const sx = cx + rotX * scale;
-        const sy = cy + (n.y + mouseY * 200) * scale;
-
-        if (sx >= 0 && sx <= w && sy >= 0 && sy <= h) {
-          const alpha = Math.min(1, Math.max(0.05, 1 - rotZ / 1000));
-          ctx.fillStyle = `rgba(0, 240, 255, ${alpha * 0.4})`;
-          ctx.beginPath();
-          ctx.arc(sx, sy, n.size * scale, 0, Math.PI * 2);
-          ctx.fill();
-
-          // Connect near nodes
-          for (let j = i + 1; j < nodes.length; j++) {
-            const n2 = nodes[j];
-            const dx = n.x - n2.x;
-            const dy = n.y - n2.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < 130) {
-              const rotX2 = n2.x * Math.cos(mouseX) - n2.z * Math.sin(mouseX);
-              const rotZ2 = n2.x * Math.sin(mouseX) + n2.z * Math.cos(mouseX);
-              const scale2 = fov / Math.max(10, rotZ2 + 400);
-              const sx2 = cx + rotX2 * scale2;
-              const sy2 = cy + (n2.y + mouseY * 200) * scale2;
-
-              ctx.strokeStyle = `rgba(0, 240, 255, ${0.08 * (1 - dist / 130)})`;
-              ctx.beginPath();
-              ctx.moveTo(sx, sy);
-              ctx.lineTo(sx2, sy2);
-              ctx.stroke();
-            }
-          }
-        }
-      }
-
-      ctx.restore();
-      sweepAngle += 0.006;
-      requestAnimationFrame(render3DCanvas);
-    }
-    render3DCanvas();
   </script>
 </body>
 </html>
